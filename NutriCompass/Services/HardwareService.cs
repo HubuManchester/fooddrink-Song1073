@@ -30,7 +30,18 @@ public sealed class HardwareService : IHardwareService
             }
 
             Accelerometer.ReadingChanged += OnAccelerometerReadingChanged;
-            Accelerometer.Start(_sensorSpeed);
+            try
+            {
+                Accelerometer.Start(_sensorSpeed);
+            }
+            catch (FeatureNotSupportedException)
+            {
+                Accelerometer.ReadingChanged -= OnAccelerometerReadingChanged;
+            }
+            catch (Exception)
+            {
+                Accelerometer.ReadingChanged -= OnAccelerometerReadingChanged;
+            }
         }
     }
 
