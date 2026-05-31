@@ -24,6 +24,11 @@ public sealed class HardwareService : IHardwareService
                 return;
             }
 
+            if (!Accelerometer.IsSupported)
+            {
+                return;
+            }
+
             Accelerometer.ReadingChanged += OnAccelerometerReadingChanged;
             Accelerometer.Start(_sensorSpeed);
         }
