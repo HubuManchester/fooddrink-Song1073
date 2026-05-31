@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:NutriCompass.ViewModels"
+    x:Class="NutriCompass.MainPage"
+    x:DataType="viewModels:MainPageViewModel"
+    Title="NutriCompass"
+    AutomationProperties.Name="NutriCompass dashboard">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24"
+            Spacing="24">
+
+            <Border
+                Stroke="{AppThemeBinding Light={StaticResource Divider}, Dark={StaticResource Gray600}}"
+                StrokeShape="RoundRectangle"
+                StrokeThickness="1"
+                Background="{AppThemeBinding Light={StaticResource SurfaceBackground}, Dark={StaticResource OffBlack}}"
+                Padding="18"
+                SemanticProperties.Description="Overview card">
+                <VerticalStackLayout Spacing="12">
+                    <Label
+                        Text="{Binding PageTitle}"
+                        FontAttributes="Bold"
+                        FontSize="24"
+                        SemanticProperties.HeadingLevel="Level1" />
+                    <Label
+                        Text="{Binding BannerHeading}"
+                        FontSize="28"
+                        SemanticProperties.HeadingLevel="Level1" />
+                    <Label
+                        Text="{Binding BannerSubtitle}"
+                        FontSize="16"
+                        LineBreakMode="WordWrap" />
+                    <Label
+                        Text="{Binding SummaryText}"
+                        FontSize="14"
+                        LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Entry
+                Placeholder="{Binding SearchPlaceholder}"
+                FontSize="14"
+                AutomationProperties.Name="Search entry"
+                PlaceholderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                ClearButtonVisibility="WhileEditing" />
+
+            <CollectionView
+                ItemsSource="{Binding Highlights}"
+                SemanticProperties.Description="Highlights list"
+                ItemsLayout="VerticalList"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:HighlightSection">
+                        <Border
+                            Stroke="{AppThemeBinding Light={StaticResource Divider}, Dark={StaticResource Gray600}}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle"
+                            Background="{AppThemeBinding Light={StaticResource SurfaceBackground}, Dark={StaticResource OffBlack}}"
+                            Margin="0,0,0,12"
+                            Padding="14">
+                            <VerticalStackLayout Spacing="6">
+                                <Label
+                                    Text="{Binding Title}"
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    SemanticProperties.Description="Highlight title" />
+                                <Label
+                                    Text="{Binding Description}"
+                                    FontSize="14"
+                                    SemanticProperties.Description="Highlight description"
+                                    LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button
+                Text="Request Help"
+                Command="{Binding HelpCommand}"
+                FontSize="16"
+                SemanticProperties.Hint="Navigates to the help section"
+                CornerRadius="10" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
