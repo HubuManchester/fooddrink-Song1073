@@ -48,6 +48,40 @@
                 PlaceholderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
                 ClearButtonVisibility="WhileEditing" />
 
+            <Border
+                Padding="16"
+                Stroke="{AppThemeBinding Light={StaticResource Divider}, Dark={StaticResource Gray600}}"
+                StrokeShape="RoundRectangle"
+                StrokeThickness="1"
+                Background="{AppThemeBinding Light={StaticResource SurfaceBackground}, Dark={StaticResource OffBlack}}"
+                SemanticProperties.Description="Sensor status summary">
+                <VerticalStackLayout Spacing="10">
+                    <Label
+                        Text="Sensor Snapshot"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        SemanticProperties.HeadingLevel="Level2"
+                        SemanticProperties.Description="Active sensor status" />
+                    <Label
+                        Text="{Binding OrientationStatus}"
+                        FontSize="14"
+                        AutomationProperties.Name="Orientation status" />
+                    <Label
+                        Text="{Binding LocationStatus}"
+                        FontSize="14"
+                        AutomationProperties.Name="Location status" />
+                    <Label
+                        Text="{Binding RestaurantRecommendation}"
+                        FontSize="14"
+                        AutomationProperties.Name="Nearby recommendation" />
+                    <Label
+                        Text="{Binding ErrorMessage}"
+                        FontSize="14"
+                        TextColor="Red"
+                        AutomationProperties.Name="Hardware error message" />
+                </VerticalStackLayout>
+            </Border>
+
             <CollectionView
                 ItemsSource="{Binding Highlights}"
                 SemanticProperties.Description="Highlights list"
