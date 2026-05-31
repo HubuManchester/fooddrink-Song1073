@@ -23,8 +23,10 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
+        builder.Services.AddSingleton<IHealthCalculatorService, HealthCalculatorService>();
         builder.Services.AddSingleton<MainPageViewModel>();
         builder.Services.AddSingleton<HelpPageViewModel>();
+        builder.Services.AddTransient<ProfileViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

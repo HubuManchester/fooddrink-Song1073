@@ -20,4 +20,9 @@ public class ShellNavigationService : INavigationService
     {
         await _shell.GoToAsync("//MainPage");
     }
+
+    public async Task NavigateToProfileAsync()
+    {
+        await _shell.GoToAsync("//ProfilePage");
+    }
 }

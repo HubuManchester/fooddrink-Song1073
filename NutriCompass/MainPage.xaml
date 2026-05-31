@@ -85,6 +85,13 @@
                 FontSize="16"
                 SemanticProperties.Hint="Navigates to the help section"
                 CornerRadius="10" />
+
+            <Button
+                Text="Open Profile"
+                Command="{Binding ProfileCommand}"
+                FontSize="16"
+                SemanticProperties.Hint="Opens the personal health calculator"
+                CornerRadius="10" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

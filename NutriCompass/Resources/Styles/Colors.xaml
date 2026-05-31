@@ -5,12 +5,12 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <Color x:Key="Primary">#3A3AE1</Color>
+    <Color x:Key="PrimaryDark">#1C1C3C</Color>
+    <Color x:Key="PrimaryDarkText">#F2F2F7</Color>
+    <Color x:Key="Secondary">#F5F2FF</Color>
+    <Color x:Key="SecondaryDarkText">#A6A6F7</Color>
+    <Color x:Key="Tertiary">#6EC5F7</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
@@ -27,8 +27,8 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
-    <Color x:Key="SurfaceBackground">#F8FAFF</Color>
-    <Color x:Key="SurfaceBackgroundDark">#0B0C10</Color>
+    <Color x:Key="SurfaceBackground">#F4F6FB</Color>
+    <Color x:Key="SurfaceBackgroundDark">#0F0F1F</Color>
     <Color x:Key="AccentAqua">#1AD1FC</Color>
     <Color x:Key="AccentMint">#24C7B8</Color>
     <Color x:Key="Divider">#E1E1E5</Color>

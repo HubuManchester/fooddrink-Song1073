@@ -13,6 +13,11 @@
         Route="MainPage" />
 
     <ShellContent
+        Title="Profile"
+        ContentTemplate="{DataTemplate pages:ProfilePage}"
+        Route="ProfilePage" />
+
+    <ShellContent
         Title="Help"
         ContentTemplate="{DataTemplate pages:HelpPage}"
         Route="HelpPage" />

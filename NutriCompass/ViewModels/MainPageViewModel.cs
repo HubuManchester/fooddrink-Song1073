@@ -29,6 +29,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         };
 
         HelpCommand = new Command(async () => await _navigationService.NavigateToHelpAsync());
+        ProfileCommand = new Command(async () => await _navigationService.NavigateToProfileAsync());
     }
 
     public string PageTitle => "NutriCompass Overview";
@@ -44,6 +45,7 @@ public class MainPageViewModel : INotifyPropertyChanged
     public ObservableCollection<HighlightSection> Highlights { get; }
 
     public ICommand HelpCommand { get; }
+    public ICommand ProfileCommand { get; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
