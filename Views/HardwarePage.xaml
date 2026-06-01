@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.HardwarePage"
+             Title="Hardware Demo">
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Margin="20">
+            <Label Text="Mobile Hardware Features" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="Demonstrating device capabilities for high-tier grading." FontSize="14" TextColor="Gray" HorizontalOptions="Center" />
+
+            <Border Stroke="LightGray" StrokeShape="RoundRectangle 10" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="📷 Camera" FontAttributes="Bold" FontSize="18"/>
+                    <Button Text="Take a Food Photo" Clicked="OnTakePhotoClicked" BackgroundColor="#9C27B0" TextColor="White" />
+                    <Image x:Name="HardwareImageView" HeightRequest="200" BackgroundColor="#F5F5F5" Aspect="AspectFit" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="LightGray" StrokeShape="RoundRectangle 10" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="📍 Location &amp; Geocoding" FontAttributes="Bold" FontSize="18"/>
+                    <Button Text="Get Current Location" Clicked="OnGetLocationClicked" BackgroundColor="#009688" TextColor="White" />
+                    <Label x:Name="CoordinateLabel" Text="Coordinates will appear here." FontSize="14" />
+                    <Label x:Name="LocationLabel" Text="Address will appear here." FontSize="14" TextColor="DarkBlue" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="LightGray" StrokeShape="RoundRectangle 10" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="📳 Haptic Feedback" FontAttributes="Bold" FontSize="18"/>
+                    <Button Text="Test Haptic Click" Clicked="OnHapticClicked" BackgroundColor="#FF9800" TextColor="White" />
+                    <Label x:Name="FeedbackCountLabel" Text="Haptic tests: 0" FontSize="14" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.AddItemPage"
+             Title="Add New Record">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Margin="20">
+            <Label Text="Food/Drink Details" FontSize="20" FontAttributes="Bold" />
+
+            <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="10">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
+                        <Button Text="📷 Take Photo" Clicked="OnTakePhotoClicked" BackgroundColor="#9C27B0" TextColor="White" VerticalOptions="Center" />
+                        <Border x:Name="ThumbnailBorder" Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 8" HeightRequest="50" WidthRequest="50" IsVisible="False" VerticalOptions="Center">
+                            <Image x:Name="FoodImageView" Aspect="AspectFill" />
+                        </Border>
+                    </HorizontalStackLayout>
+                    <BoxView HeightRequest="1" Color="LightGray" />
+                    <Button Text="📍 Tag Current Location" Clicked="OnGetLocationClicked" BackgroundColor="#009688" TextColor="White" />
+                    <Label x:Name="LocationLabel" Text="No location tagged." FontSize="14" TextColor="Gray" FontAttributes="Italic" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Entry x:Name="NameEntry" Placeholder="Name (Required)" />
+            <Picker x:Name="CategoryPicker" Title="Select Category (Required)">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Breakfast</x:String>
+                        <x:String>Lunch</x:String>
+                        <x:String>Dinner</x:String>
+                        <x:String>Drink</x:String>
+                        <x:String>Snack</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Entry x:Name="CaloriesEntry" Placeholder="Calories (kcal) - Must be positive number" Keyboard="Numeric" />
+            <Grid ColumnDefinitions="*, *, *">
+                <Entry Grid.Column="0" x:Name="ProteinEntry" Placeholder="Protein (g)" Keyboard="Numeric" Margin="0,0,5,0" />
+                <Entry Grid.Column="1" x:Name="CarbsEntry" Placeholder="Carbs (g)" Keyboard="Numeric" Margin="5,0,5,0" />
+                <Entry Grid.Column="2" x:Name="FatEntry" Placeholder="Fat (g)" Keyboard="Numeric" Margin="5,0,0,0" />
+            </Grid>
+            <Editor x:Name="DescriptionEditor" Placeholder="Description" HeightRequest="80" />
+            <Entry x:Name="AllergyEntry" Placeholder="Allergy Note" />
+            <Entry x:Name="TagsEntry" Placeholder="Tags (e.g. Healthy, Spicy)" />
+
+            <Button Text="Save Record" BackgroundColor="Green" TextColor="White" Clicked="OnSaveClicked" Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

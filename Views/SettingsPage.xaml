@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.SettingsPage"
+             Title="Settings &amp; Accessibility">
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Margin="20">
+            <Label Text="Accessibility Options" FontSize="22" FontAttributes="Bold" />
+            <Label Text="Ensure the app is accessible to all users (WCAG Guidelines)." FontSize="14" TextColor="Gray" />
+
+            <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="15">
+                <VerticalStackLayout Spacing="15">
+                    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                            <Label Text="🌙 Dark Mode" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="Switch to a dark color scheme." FontSize="14" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Switch x:Name="ThemeSwitch" Grid.Column="1" Toggled="OnThemeToggled" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray" />
+                    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                            <Label Text="🔎 Large Text Mode" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="Increase font size across the app." FontSize="14" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Switch x:Name="LargeTextSwitch" Grid.Column="1" Toggled="OnLargeTextToggled" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="About App" FontSize="22" FontAttributes="Bold" Margin="0,20,0,0" />
+            <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Food &amp; Drink Assistant" FontAttributes="Bold" FontSize="16" />
+                    <Label Text="Version 1.0.0" FontSize="14" TextColor="Gray" />
+                    <Label Text="Developed for 6G6Z0014 Assessment." FontSize="14" TextColor="Gray" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

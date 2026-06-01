@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.FoodDetailPage"
+             Title="Nutritional Details">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Margin="20">
+
+            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15" Margin="0,0,0,10">
+                <Border Grid.Column="0" Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" HeightRequest="80" WidthRequest="80" VerticalOptions="Start">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding ImagePath.Length}" Value="0">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Image Source="{Binding ImagePath}" Aspect="AspectFill" />
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                    <Label Text="{Binding Name}" FontSize="28" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#333333, Dark=White}" />
+                    <Label Text="{Binding Category}" FontSize="18" TextColor="Gray" FontAttributes="Italic" />
+                    <Label Text="{Binding LocationText, StringFormat='📍 {0}'}" FontSize="14" TextColor="{AppThemeBinding Light=DarkBlue, Dark=LightBlue}" FontAttributes="Bold" Margin="0,5,0,0">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding LocationText.Length}" Value="0">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </VerticalStackLayout>
+            </Grid>
+
+            <BoxView HeightRequest="1" Color="Gray" Margin="0,10" />
+
+            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto" RowSpacing="10">
+                <Label Grid.Row="0" Grid.Column="0" Text="Calories:" FontAttributes="Bold" FontSize="16" />
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding CaloriesLabel}" TextColor="Tomato" FontSize="16" FontAttributes="Bold" />
+                <Label Grid.Row="1" Grid.Column="0" Text="Protein:" FontAttributes="Bold" FontSize="16" />
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Protein, StringFormat='{0} g'}" FontSize="16" />
+                <Label Grid.Row="2" Grid.Column="0" Text="Carbs:" FontAttributes="Bold" FontSize="16" />
+                <Label Grid.Row="2" Grid.Column="1" Text="{Binding Carbs, StringFormat='{0} g'}" FontSize="16" />
+                <Label Grid.Row="3" Grid.Column="0" Text="Fat:" FontAttributes="Bold" FontSize="16" />
+                <Label Grid.Row="3" Grid.Column="1" Text="{Binding Fat, StringFormat='{0} g'}" FontSize="16" />
+            </Grid>
+
+            <BoxView HeightRequest="1" Color="Gray" Margin="0,10" />
+
+            <Label Text="Description:" FontAttributes="Bold" FontSize="16" />
+            <Label Text="{Binding Description}" FontSize="15" />
+
+            <Label Text="Allergy Note:" FontAttributes="Bold" FontSize="16" Margin="0,10,0,0" />
+            <Label Text="{Binding AllergyNote}" FontSize="15" TextColor="Tomato" />
+
+            <VerticalStackLayout Spacing="10" Margin="0,30,0,0">
+                <Button Text="🔊 Read Summary Aloud" Clicked="OnSpeakClicked" BackgroundColor="#2196F3" TextColor="White" CornerRadius="8" />
+                <Button Text="⏹ Stop Reading" Clicked="OnStopSpeakClicked" BackgroundColor="#757575" TextColor="White" CornerRadius="8" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
