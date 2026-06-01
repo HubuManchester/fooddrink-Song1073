@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:AccessibleContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:NutriCompass.Pages"
+    x:Class="NutriCompass.Pages.AddItemPage"
+    Title="Add Item"
+    AutomationProperties.Name="Add Item Page">
+
+    <ScrollView Padding="24">
+        <VerticalStackLayout Spacing="16">
+            <Label
+                Text="Add New Food"
+                Style="{StaticResource Headline}"
+                AutomationProperties.Name="Add item header" />
+
+            <Entry x:Name="NameEntry" Placeholder="Name" AutomationProperties.Name="Name entry" />
+            <Entry x:Name="CategoryEntry" Placeholder="Category" AutomationProperties.Name="Category entry" />
+            <Entry x:Name="DescriptionEntry" Placeholder="Description" AutomationProperties.Name="Description entry" />
+            <Entry x:Name="CaloriesEntry" Placeholder="Calories" Keyboard="Numeric" AutomationProperties.Name="Calories entry" />
+
+            <Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False" AutomationProperties.Name="Validation error" />
+
+            <Button
+                Text="Save Item"
+                AutomationProperties.Name="Save item button"
+                Clicked="OnSaveItemClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</pages:AccessibleContentPage>

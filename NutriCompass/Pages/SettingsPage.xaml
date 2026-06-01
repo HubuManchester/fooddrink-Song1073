@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:AccessibleContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:NutriCompass.Pages"
+    x:Class="NutriCompass.Pages.SettingsPage"
+    Title="Settings"
+    AutomationProperties.Name="Settings Page">
+
+    <ScrollView Padding="24">
+        <VerticalStackLayout Spacing="20">
+            <Label
+                Text="System Preferences"
+                Style="{StaticResource Headline}"
+                AutomationProperties.Name="Preferences header" />
+
+            <Frame
+                CornerRadius="12"
+                Padding="16"
+                BackgroundColor="{StaticResource CreamBrush}"
+                HasShadow="True">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout
+                        VerticalOptions="Center"
+                        AutomationProperties.Name="Theme toggle row">
+                        <Label
+                            Text="Dark Theme"
+                            VerticalOptions="Center"
+                            AutomationProperties.Name="Theme label" />
+                        <Switch
+                            x:Name="ThemeSwitch"
+                            HorizontalOptions="EndAndExpand"
+                            AutomationProperties.Name="Theme switch"
+                            Toggled="OnThemeToggled" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout
+                        VerticalOptions="Center"
+                        AutomationProperties.Name="Large font toggle row">
+                        <Label
+                            Text="Large Font"
+                            VerticalOptions="Center"
+                            AutomationProperties.Name="Large font label" />
+                        <Switch
+                            x:Name="LargeFontSwitch"
+                            HorizontalOptions="EndAndExpand"
+                            AutomationProperties.Name="Large font switch"
+                            Toggled="OnLargeFontToggled" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</pages:AccessibleContentPage>

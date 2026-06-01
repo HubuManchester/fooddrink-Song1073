@@ -3,23 +3,26 @@
     x:Class="NutriCompass.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:NutriCompass"
     xmlns:pages="clr-namespace:NutriCompass.Pages"
-    Title="NutriCompass">
+    Title="NutriCompass"
+    FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
-    <ShellContent
-        Title="Profile"
-        ContentTemplate="{DataTemplate pages:ProfilePage}"
-        Route="ProfilePage" />
-
-    <ShellContent
-        Title="Help"
-        ContentTemplate="{DataTemplate pages:HelpPage}"
-        Route="HelpPage" />
+    <TabBar>
+        <ShellContent
+            Title="Food"
+            ContentTemplate="{DataTemplate pages:FoodPage}"
+            AutomationProperties.Name="Food Tab"
+            AutomationProperties.HelpText="Browse the food catalog" />
+        <ShellContent
+            Title="Hardware"
+            ContentTemplate="{DataTemplate pages:HardwarePage}"
+            AutomationProperties.Name="Hardware Tab"
+            AutomationProperties.HelpText="Try out the hardware demos" />
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate pages:SettingsPage}"
+            AutomationProperties.Name="Settings Tab"
+            AutomationProperties.HelpText="Adjust theme and large font" />
+    </TabBar>
 
 </Shell>

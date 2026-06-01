@@ -1,18 +1,16 @@
-﻿namespace NutriCompass;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace NutriCompass;
 
 public partial class App : Application
 {
-    private readonly AppShell _shell;
+	public App()
+	{
+		InitializeComponent();
+	}
 
-    public App(AppShell shell)
-    {
-        InitializeComponent();
-        _shell = shell;
-        MainPage = shell;
-    }
-
-    protected override Window CreateWindow(IActivationState? activationState)
-    {
-        return new Window(_shell);
-    }
+	protected override Window CreateWindow(IActivationState? activationState)
+	{
+		return new Window(new AppShell());
+	}
 }

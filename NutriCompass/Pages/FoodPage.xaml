@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:AccessibleContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:NutriCompass.Pages"
+    x:Class="NutriCompass.Pages.FoodPage"
+    Title="Food"
+    AutomationProperties.Name="Food Page">
+
+    <ScrollView
+        AutomationProperties.Name="Food catalog scroll"
+        SemanticProperties.Description="Scroll through curated food cards">
+        <VerticalStackLayout
+            Padding="24"
+            Spacing="20">
+
+            <Label
+                Text="Food Catalog"
+                Style="{StaticResource Headline}"
+                AutomationProperties.Name="Food catalog header" />
+
+            <SearchBar
+                x:Name="SearchBar"
+                Placeholder="Search meals or tags"
+                AutomationProperties.Name="Food search"
+                TextChanged="OnSearchTextChanged" />
+
+            <CollectionView
+                x:Name="FoodCollection"
+                ItemsSource="{Binding FoodItems}"
+                AutomationProperties.Name="Food collection"
+                SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            CornerRadius="16"
+                            Padding="16"
+                            BorderColor="{StaticResource Gray300Brush}"
+                            BackgroundColor="{StaticResource CreamBrush}">
+                            <VerticalStackLayout Spacing="6">
+                                <Label
+                                    Text="{Binding Name}"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    AutomationProperties.Name="Food name" />
+                                <Label
+                                    Text="{Binding Category}"
+                                    FontSize="14"
+                                    AutomationProperties.Name="Food category" />
+                                <Label
+                                    Text="{Binding MacroSummary}"
+                                    FontSize="13"
+                                    AutomationProperties.Name="Food macro summary" />
+                                <Label
+                                    Text="{Binding Description}"
+                                    FontSize="12"
+                                    AutomationProperties.Name="Food description" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</pages:AccessibleContentPage>

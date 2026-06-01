@@ -1,15 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NutriCompass.Pages;
 using NutriCompass.Services;
-using NutriCompass.ViewModels;
-using System;
 
 namespace NutriCompass;
 
 public static class MauiProgram
 {
-    public static IServiceProvider Services { get; private set; } = default!;
-
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -21,20 +18,19 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        builder.Services.AddSingleton<AppShell>();
-        builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
-        builder.Services.AddSingleton<IHealthCalculatorService, HealthCalculatorService>();
-        builder.Services.AddSingleton<IHardwareService, HardwareService>();
-        builder.Services.AddSingleton<MainPageViewModel>();
-        builder.Services.AddSingleton<HelpPageViewModel>();
-        builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddSingleton<AccessibilityService>();
+        builder.Services.AddSingleton<MockApiConfig>();
+        builder.Services.AddSingleton<FoodCatalogService>();
+        builder.Services.AddSingleton<FoodPage>();
+        builder.Services.AddSingleton<HardwarePage>();
+        builder.Services.AddSingleton<SettingsPage>();
+        builder.Services.AddTransient<AddItemPage>();
+        builder.Services.AddTransient<FoodDetailPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
-        var app = builder.Build();
-        Services = app.Services;
-        return app;
+        return builder.Build();
     }
 }

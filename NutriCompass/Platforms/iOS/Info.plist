@@ -9,8 +9,6 @@
 		<integer>1</integer>
 		<integer>2</integer>
 	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location data helps NutriCompass suggest healthy restaurants near you.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>
