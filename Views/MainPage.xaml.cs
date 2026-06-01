@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using FoodDrinkApp.Models;
 using FoodDrinkApp.Services;
 
@@ -5,9 +6,12 @@ namespace FoodDrinkApp.Views;
 
 public partial class MainPage : ContentPage
 {
+    private ObservableCollection<FoodItem> _displayFoods = new ObservableCollection<FoodItem>();
+
     public MainPage()
     {
         InitializeComponent();
+        FoodCollection.ItemsSource = _displayFoods;
     }
 
     protected override async void OnAppearing()
@@ -20,8 +24,15 @@ public partial class MainPage : ContentPage
     private async Task LoadDataAsync(string query = "")
     {
         FoodRefreshView.IsRefreshing = true;
+
         var foods = await FoodCatalogService.GetFoodsAsync(query);
-        FoodCollection.ItemsSource = foods;
+
+        _displayFoods.Clear();
+        foreach (var item in foods)
+        {
+            _displayFoods.Add(item);
+        }
+
         FoodRefreshView.IsRefreshing = false;
     }
 
@@ -52,21 +63,22 @@ public partial class MainPage : ContentPage
         }
     }
 
-    // 👇 處理滑動刪除按鈕點擊的邏輯 👇
     private async void OnDeleteInvoked(object? sender, EventArgs e)
     {
         if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is FoodItem itemToDelete)
         {
-            // 彈出確認對話框
             bool confirm = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete '{itemToDelete.Name}'?", "Yes", "Cancel");
             if (confirm)
             {
-                // 刪除時觸發輕微震動回饋 (結合硬體功能！)
                 try { Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
 
-                // 呼叫 Service 刪除並重新載入列表
                 await FoodCatalogService.DeleteFoodAsync(itemToDelete.Id);
-                await LoadDataAsync(FoodSearchBar.Text);
+
+                var itemToRemove = _displayFoods.FirstOrDefault(f => f.Id == itemToDelete.Id);
+                if (itemToRemove != null)
+                {
+                    _displayFoods.Remove(itemToRemove);
+                }
             }
         }
     }
