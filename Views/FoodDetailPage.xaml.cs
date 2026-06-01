@@ -43,6 +43,23 @@ public partial class FoodDetailPage : ContentPage
         SpeechService.Stop();
     }
 
+    // 👇 處理詳情頁刪除按鈕點擊的邏輯 👇
+    private async void OnDeleteClicked(object? sender, EventArgs e)
+    {
+        if (Item != null)
+        {
+            bool confirm = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete '{Item.Name}'?", "Yes", "Cancel");
+            if (confirm)
+            {
+                try { Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
+
+                // 刪除後自動返回上一頁 (首頁)
+                await FoodCatalogService.DeleteFoodAsync(Item.Id);
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+    }
+
     protected override void OnDisappearing()
     {
         SpeechService.Stop();

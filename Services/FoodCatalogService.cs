@@ -64,4 +64,15 @@ public static class FoodCatalogService
         _localData.Add(item);
         SaveLocalData();
     }
+
+    // 👇 新增的刪除功能 👇
+    public static async Task DeleteFoodAsync(string id)
+    {
+        var item = _localData.FirstOrDefault(f => f.Id == id);
+        if (item != null)
+        {
+            _localData.Remove(item);
+            SaveLocalData(); // 同步更新到本地檔案
+        }
+    }
 }

@@ -11,17 +11,25 @@
             <CollectionView x:Name="FoodCollection" SelectionMode="Single" SelectionChanged="OnFoodSelected">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="10,5" Padding="15" StrokeShape="RoundRectangle 10" 
-                                BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
-                            <Border.Shadow>
-                                <Shadow Brush="Black" Offset="0,2" Opacity="0.2" Radius="4" />
-                            </Border.Shadow>
-                            <VerticalStackLayout>
-                                <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" />
-                                <Label Text="{Binding Category}" FontSize="14" TextColor="Gray" />
-                                <Label Text="{Binding CaloriesLabel}" FontSize="14" TextColor="Tomato" />
-                            </VerticalStackLayout>
-                        </Border>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" BackgroundColor="#F44336" Invoked="OnDeleteInvoked" CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Border Margin="10,5" Padding="15" StrokeShape="RoundRectangle 10" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Opacity="0.2" Radius="4" />
+                                </Border.Shadow>
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" />
+                                    <Label Text="{Binding Category}" FontSize="14" TextColor="Gray" />
+                                    <Label Text="{Binding CaloriesLabel}" FontSize="14" TextColor="Tomato" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                        </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
