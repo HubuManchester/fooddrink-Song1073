@@ -7,4 +7,8 @@ public sealed class FoodItem
     public string Description { get; init; } = string.Empty;
     public string MacroSummary { get; init; } = string.Empty;
     public string Tags { get; init; } = string.Empty;
+
+    public string AccessibleSummary => string.IsNullOrWhiteSpace(Description)
+        ? $"{Name} ({Category}) · {MacroSummary}"
+        : $"{Name} ({Category}) · {Description} · {MacroSummary}";
 }

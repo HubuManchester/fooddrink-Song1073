@@ -1,8 +1,9 @@
-using System.Collections.Generic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using NutriCompass.Models;
 
@@ -12,6 +13,7 @@ public sealed class FoodCatalogService
 {
     private readonly MockApiConfig _config;
     private readonly HttpClient _httpClient;
+    private readonly List<FoodItem> _fallbackCache = GetLocalMockData().ToList();
 
     public FoodCatalogService(MockApiConfig config)
     {
@@ -19,19 +21,34 @@ public sealed class FoodCatalogService
         _httpClient = new HttpClient();
     }
 
-    public async Task<IEnumerable<FoodItem>> GetFoodsAsync()
+    public Task<FoodCatalogResult> GetFoodsAsync(CancellationToken cancellationToken = default)
     {
+        return FetchFoodsAsync(cancellationToken);
+    }
+
+    public async Task<FoodCatalogSubmissionResult> SubmitFoodAsync(FoodItem newItem, CancellationToken cancellationToken = default)
+    {
+        var sanitized = new FoodItem
+        {
+            Name = newItem.Name.Trim(),
+            Category = newItem.Category.Trim(),
+            Description = newItem.Description.Trim(),
+            MacroSummary = newItem.MacroSummary.Trim(),
+            Tags = newItem.Tags?.Trim() ?? string.Empty
+        };
+
         if (string.IsNullOrWhiteSpace(_config.EndpointUrl))
         {
-            return GetLocalMockData();
+            AddToFallback(sanitized);
+            return new FoodCatalogSubmissionResult(true, "Cached locally because endpoint is not configured.");
         }
 
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<IEnumerable<FoodItem>>(_config.EndpointUrl);
-            if (response is not null)
+            var response = await _httpClient.PostAsJsonAsync(_config.EndpointUrl, sanitized, cancellationToken);
+            if (response.IsSuccessStatusCode)
             {
-                return response;
+                return new FoodCatalogSubmissionResult(true, "Stored remotely.");
             }
         }
         catch
@@ -39,7 +56,36 @@ public sealed class FoodCatalogService
             // swallow and fallback
         }
 
-        return GetLocalMockData();
+        AddToFallback(sanitized);
+        return new FoodCatalogSubmissionResult(false, "Remote service unavailable; saved locally.");
+    }
+
+    private async Task<FoodCatalogResult> FetchFoodsAsync(CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(_config.EndpointUrl))
+        {
+            return new FoodCatalogResult(_fallbackCache, true);
+        }
+
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<FoodItem>>(_config.EndpointUrl, cancellationToken);
+            if (response is not null && response.Any())
+            {
+                return new FoodCatalogResult(response, false);
+            }
+        }
+        catch
+        {
+            // swallow and fallback
+        }
+
+        return new FoodCatalogResult(_fallbackCache, true);
+    }
+
+    private void AddToFallback(FoodItem item)
+    {
+        _fallbackCache.Add(item);
     }
 
     private static IEnumerable<FoodItem> GetLocalMockData()
@@ -73,3 +119,7 @@ public sealed class FoodCatalogService
         };
     }
 }
+
+public sealed record FoodCatalogResult(IEnumerable<FoodItem> Items, bool UsedFallback);
+
+public sealed record FoodCatalogSubmissionResult(bool IsSuccess, string Message);

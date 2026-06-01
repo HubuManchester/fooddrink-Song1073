@@ -1,16 +1,23 @@
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.Maui.Devices.Sensors;
+using NutriCompass.Models;
+using NutriCompass.Services;
+
 namespace NutriCompass.Pages;
 
 public partial class AddItemPage : AccessibleContentPage
 {
-    public AddItemPage()
+    private readonly FoodCatalogService _catalogService;
+
+    public AddItemPage(FoodCatalogService catalogService)
     {
         InitializeComponent();
+        _catalogService = catalogService;
     }
 
-    private void OnSaveItemClicked(object? sender, EventArgs e)
+    private async void OnSaveItemClicked(object? sender, EventArgs e)
     {
         ErrorLabel.IsVisible = false;
         var errors = ValidateForm(out var calories);
@@ -22,8 +29,23 @@ public partial class AddItemPage : AccessibleContentPage
             return;
         }
 
-        DisplayAlert("Saved", "Food item recorded", "OK");
-        ClearForm();
+        var newItem = new FoodItem
+        {
+            Name = NameEntry.Text?.Trim() ?? string.Empty,
+            Category = CategoryEntry.Text?.Trim() ?? string.Empty,
+            Description = DescriptionEntry.Text?.Trim() ?? string.Empty,
+            MacroSummary = $"{calories:N0} kcal",
+            Tags = string.Empty
+        };
+
+        var result = await _catalogService.SubmitFoodAsync(newItem);
+        var title = result.IsSuccess ? "Saved" : "Offline";
+        await DisplayAlert(title, result.Message, "OK");
+
+        if (result.IsSuccess)
+        {
+            ClearForm();
+        }
     }
 
     private string[] ValidateForm(out double calorieValue)

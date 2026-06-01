@@ -18,9 +18,65 @@
                 Text="This page will expose location, geocoding, and haptic feedback demos."
                 AutomationProperties.Name="Hardware explanation" />
 
-            <Button
-                Text="Trigger Haptic Simulation"
-                AutomationProperties.Name="Test haptic button" />
+            <Frame
+                CornerRadius="16"
+                Padding="16"
+                BorderColor="{StaticResource Gray300Brush}"
+                BackgroundColor="{StaticResource CreamBrush}">
+                <VerticalStackLayout Spacing="10">
+                    <Button
+                        x:Name="RefreshLocationButton"
+                        Text="Refresh location"
+                        AutomationProperties.Name="Refresh location button"
+                        Clicked="OnRefreshLocationClicked" />
+
+                    <Label
+                        Text="Location status"
+                        AutomationProperties.Name="Location status label"
+                        FontAttributes="Bold" />
+
+                    <Label
+                        x:Name="LocationStatusLabel"
+                        Text="Tap refresh to request the current location."
+                        AutomationProperties.Name="Location status value" />
+
+                    <Label
+                        Text="Coordinates"
+                        FontAttributes="Bold"
+                        AutomationProperties.Name="Coordinates label" />
+                    <Label
+                        x:Name="CoordinatesValueLabel"
+                        Text="N/A"
+                        AutomationProperties.Name="Coordinates value" />
+
+                    <Label
+                        Text="Placemark"
+                        FontAttributes="Bold"
+                        AutomationProperties.Name="Placemark label" />
+                    <Label
+                        x:Name="PlacemarkValueLabel"
+                        Text="N/A"
+                        AutomationProperties.Name="Placemark value" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame
+                CornerRadius="16"
+                Padding="16"
+                BorderColor="{StaticResource Gray300Brush}"
+                BackgroundColor="{StaticResource CreamBrush}">
+                <VerticalStackLayout Spacing="10">
+                    <Button
+                        x:Name="HapticButton"
+                        Text="Trigger Haptic Simulation"
+                        AutomationProperties.Name="Test haptic button"
+                        Clicked="OnHapticButtonClicked" />
+                    <Label
+                        x:Name="HapticCountLabel"
+                        Text="Haptic taps: 0"
+                        AutomationProperties.Name="Haptic count label" />
+                </VerticalStackLayout>
+            </Frame>
         </VerticalStackLayout>
     </ScrollView>
 

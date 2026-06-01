@@ -28,41 +28,20 @@ public partial class FoodPage : AccessibleContentPage
     {
         try
         {
-            var items = (await _catalogService.GetFoodsAsync()).ToList();
+            var result = await _catalogService.GetFoodsAsync();
             _backingList.Clear();
-            _backingList.AddRange(items);
+            _backingList.AddRange(result.Items);
+            RefreshItems(_backingList);
+
+            if (result.UsedFallback)
+            {
+                await DisplayAlert("Offline", "Unable to load remote catalog. Showing local favorites.", "OK");
+            }
         }
         catch
         {
-            await DisplayAlert("Offline", "Unable to load remote catalog. Showing local favorites.", "OK");
-            _backingList.Clear();
-            _backingList.AddRange(GetFallback());
+            await DisplayAlert("Offline", "Unable to load remote catalog right now.", "OK");
         }
-
-        RefreshItems(_backingList);
-    }
-
-    private static IEnumerable<FoodItem> GetFallback()
-    {
-        return new[]
-        {
-            new FoodItem
-            {
-                Name = "Berry Kefir Smoothie",
-                Category = "Snack",
-                Description = "Probiotic-rich kefir blended with berries.",
-                MacroSummary = "195 kcal · 8g protein · 4g fat",
-                Tags = "smoothie, berry"
-            },
-            new FoodItem
-            {
-                Name = "Thai Basil Power Bowl",
-                Category = "Main",
-                Description = "Jasmine rice, basil-chicken, veggies.",
-                MacroSummary = "420 kcal · 32g protein · 12g fat",
-                Tags = "thai, bowl"
-            }
-        };
     }
 
     private void RefreshItems(IEnumerable<FoodItem> items)
