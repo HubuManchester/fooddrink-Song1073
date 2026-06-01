@@ -39,12 +39,29 @@ public static class FoodCatalogService
         File.WriteAllText(_localFilePath, json);
     }
 
+    // 👇 升级后的查询功能：优先云端拉取，失败则用本地缓存兜底 👇
     public static async Task<List<FoodItem>> GetFoodsAsync(string query = "")
     {
+        try
+        {
+            // 尝试从 MockAPI 获取最新数据
+            var response = await _httpClient.GetFromJsonAsync<List<FoodItem>>(MockApiConfig.EndpointUrl);
+            if (response != null)
+            {
+                _localData = response;
+                SaveLocalData(); // 将云端最新数据备份到本地
+            }
+        }
+        catch (Exception ex)
+        {
+            // 如果断网或 API 错误，捕获异常，后续代码会自动使用 _localData 作为离线兜底
+            System.Diagnostics.Debug.WriteLine($"API Get Error: {ex.Message}");
+        }
+
         List<FoodItem> currentData = _localData;
 
         if (string.IsNullOrWhiteSpace(query))
-            return currentData;
+            return currentData.ToList();
 
         query = query.ToLower();
         return currentData.Where(f =>
@@ -54,25 +71,59 @@ public static class FoodCatalogService
         ).ToList();
     }
 
+    // 👇 升级后的添加功能：双写策略（云端+本地） 👇
     public static async Task AddFoodAsync(FoodItem item)
     {
+        // 先生成一个临时的本地 ID
         if (string.IsNullOrEmpty(item.Id))
         {
             item.Id = Guid.NewGuid().ToString();
         }
 
+        try
+        {
+            // 尝试向 MockAPI 发送 POST 请求
+            var response = await _httpClient.PostAsJsonAsync(MockApiConfig.EndpointUrl, item);
+            if (response.IsSuccessStatusCode)
+            {
+                // 如果云端创建成功，把临时 ID 替换为云端生成的真实 ID
+                var createdItem = await response.Content.ReadFromJsonAsync<FoodItem>();
+                if (createdItem != null)
+                {
+                    item.Id = createdItem.Id;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"API Post Error: {ex.Message}");
+        }
+
+        // 无论云端是否成功，都在本地直接显示并保存（极速响应）
         _localData.Add(item);
         SaveLocalData();
     }
 
-    // 👇 新增的刪除功能 👇
+    // 👇 升级后的删除功能：双删策略（云端+本地） 👇
     public static async Task DeleteFoodAsync(string id)
     {
+        try
+        {
+            // 尝试向 MockAPI 发送 DELETE 请求
+            string deleteUrl = $"{MockApiConfig.EndpointUrl}/{id}";
+            await _httpClient.DeleteAsync(deleteUrl);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"API Delete Error: {ex.Message}");
+        }
+
+        // 无论云端是否成功，都在本地内存和文件中移除它
         var item = _localData.FirstOrDefault(f => f.Id == id);
         if (item != null)
         {
             _localData.Remove(item);
-            SaveLocalData(); // 同步更新到本地檔案
+            SaveLocalData();
         }
     }
 }
