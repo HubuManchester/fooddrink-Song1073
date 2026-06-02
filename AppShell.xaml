@@ -6,18 +6,39 @@
     xmlns:local="clr-namespace:FoodDrinkApp"
     xmlns:views="clr-namespace:FoodDrinkApp.Views"
     Shell.FlyoutBehavior="Disabled"
-    Shell.TabBarBackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E2E}"
-    Shell.TabBarTitleColor="{AppThemeBinding Light=#512BD4, Dark=#ac99ea}"
-    Shell.TabBarUnselectedColor="{AppThemeBinding Light=#757575, Dark=#9E9E9E}">
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light=#FAFBFF, Dark=#16162A}"
+    Shell.TabBarTitleColor="{AppThemeBinding Light=#7C4DFF, Dark=#B39DFF}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}">
 
     <TabBar>
-        <Tab Title="Home" Icon="dotnet_bot.png">
+        <Tab Title="Home">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xf480;" FontFamily="FluentIcons" Size="22" />
+            </Tab.Icon>
             <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
         </Tab>
-        <Tab Title="Hardware" Icon="dotnet_bot.png">
+        <Tab Title="Diet">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xe2dd;" FontFamily="FluentIcons" Size="22" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate views:DietRecordPage}" />
+        </Tab>
+        <Tab Title="Profile">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xf5bd;" FontFamily="FluentIcons" Size="22" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
+        </Tab>
+        <Tab Title="Hardware">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xf5e0;" FontFamily="FluentIcons" Size="22" />
+            </Tab.Icon>
             <ShellContent ContentTemplate="{DataTemplate views:HardwarePage}" />
         </Tab>
-        <Tab Title="Settings" Icon="dotnet_bot.png">
+        <Tab Title="Settings">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xf6a9;" FontFamily="FluentIcons" Size="22" />
+            </Tab.Icon>
             <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
         </Tab>
     </TabBar>

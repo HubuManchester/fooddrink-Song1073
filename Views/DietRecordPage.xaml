@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.DietRecordPage"
+             Title="Today's Diet"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+
+    <Grid>
+        <!-- ── Main content layer ── -->
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Header                                         -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,18,20,14"
+                    StrokeShape="RoundRectangle 0,0,24,24"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource HeaderLight}, Dark={StaticResource HeaderDark}}">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Opacity="0.08" Radius="12" />
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto" RowSpacing="4">
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto, *" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="&#xe2dd;" FontFamily="FluentIcons" FontSize="22"
+                               TextColor="{StaticResource AccentGreen}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="Today's Diet" 
+                               FontSize="26" FontAttributes="Bold" FontFamily="PlayfairBold"
+                               CharacterSpacing="0.5" LineBreakMode="WordWrap"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                    </Grid>
+
+                    <Label Grid.Row="1" x:Name="DateLabel" Text="" 
+                           FontSize="13" Margin="0,0,12,2" LineBreakMode="WordWrap"
+                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                </Grid>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Scrollable Content                             -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <RefreshView Grid.Row="1" x:Name="DietRefreshView" Refreshing="OnRefreshing">
+                <ScrollView>
+                    <VerticalStackLayout Spacing="12" Padding="16,12,16,30">
+
+                        <!-- ── Calorie Progress Card ── -->
+                        <Border Padding="18,16" StrokeShape="RoundRectangle 18" StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,3" Opacity="0.08" Radius="10" />
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="10">
+                                <!-- Top row: consumed / target -->
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="Calories Consumed" FontSize="13"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                        <Label x:Name="ConsumedLabel" Text="0" FontSize="36" FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentOrange}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" HorizontalOptions="End">
+                                        <Label Text="Target" FontSize="12" HorizontalTextAlignment="End"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                        <Label x:Name="TargetLabel" Text="—" FontSize="17" FontAttributes="Bold" HorizontalTextAlignment="End"
+                                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!-- Progress bar -->
+                                <Grid HeightRequest="10" Margin="0,2,0,0">
+                                    <Border StrokeShape="RoundRectangle 5" StrokeThickness="0" 
+                                            BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#252535}" />
+                                    <Border x:Name="ProgressBarFill" StrokeShape="RoundRectangle 5" StrokeThickness="0"
+                                            BackgroundColor="{StaticResource AccentGreen}" HorizontalOptions="Start" />
+                                </Grid>
+
+                                <!-- Remaining + macros -->
+                                <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8" Margin="0,4,0,0">
+                                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                        <Label x:Name="RemainingLabel" Text="—" FontSize="17" FontAttributes="Bold"
+                                               HorizontalOptions="Center" TextColor="{StaticResource AccentGreen}" />
+                                        <Label Text="Remaining" FontSize="10" HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                        <Label x:Name="TodayProteinLabel" Text="0g" FontSize="17" FontAttributes="Bold"
+                                               HorizontalOptions="Center" TextColor="{StaticResource AccentBlue}" />
+                                        <Label Text="Protein" FontSize="10" HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
+                                        <Label x:Name="TodayCarbsLabel" Text="0g" FontSize="17" FontAttributes="Bold"
+                                               HorizontalOptions="Center" TextColor="{StaticResource AccentAmber}" />
+                                        <Label Text="Carbs" FontSize="10" HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- ── Meal Sections (built dynamically) ── -->
+                        <VerticalStackLayout x:Name="MealSectionsContainer" Spacing="8" />
+
+                        <!-- ── Empty State ── -->
+                        <Border x:Name="EmptyState" Padding="30" StrokeShape="RoundRectangle 16" StrokeThickness="0" IsVisible="False"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                                <Label Text="&#xf1ec;" FontFamily="FluentIcons" FontSize="48" HorizontalOptions="Center"
+                                       TextColor="{StaticResource AccentPurple}" />
+                                <Label Text="No meals recorded today" FontSize="17" FontAttributes="Bold" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                                <Label Text="Tap the + button to add food to your daily record."
+                                       FontSize="13" HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!--  Floating Action Button (FAB)                  -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <Border WidthRequest="56" HeightRequest="56"
+                StrokeShape="RoundRectangle 28" StrokeThickness="0"
+                BackgroundColor="{StaticResource AccentGreen}"
+                HorizontalOptions="End" VerticalOptions="End"
+                Margin="0,0,20,20">
+            <Border.Shadow>
+                <Shadow Brush="{StaticResource AccentGreen}" Offset="0,4" Opacity="0.35" Radius="12" />
+            </Border.Shadow>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAddFoodClicked" />
+            </Border.GestureRecognizers>
+            <Label Text="&#xf109;" FontFamily="FluentIcons" TextColor="White" FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
+    </Grid>
+</ContentPage>

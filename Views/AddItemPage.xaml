@@ -2,106 +2,168 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FoodDrinkApp.Views.AddItemPage"
-             Title="Add New Record"
+             Title="Add New Food"
+             Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
-    <ScrollView>
-        <VerticalStackLayout Spacing="15" Padding="20,16,20,30">
 
-            <!-- Header -->
-            <Label Text="🍴 New Food/Drink" FontSize="26" FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
-            <Label Text="Fill in the details below to add a new item to your collection."
-                   FontSize="14" Margin="0,0,0,5"
-                   TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+    <Grid RowDefinitions="Auto, *">
 
-            <!-- ── Media & Location Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="📸 Media &amp; Location" FontSize="16" FontAttributes="Bold" />
-                    <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
-                        <Button Text="📷 Take Photo" Clicked="OnTakePhotoClicked"
-                                BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
-                                CornerRadius="10" FontAttributes="Bold" VerticalOptions="Center" />
-                        <Border x:Name="ThumbnailBorder" StrokeShape="RoundRectangle 10"
-                                StrokeThickness="0" HeightRequest="50" WidthRequest="50"
-                                IsVisible="False" VerticalOptions="Center"
-                                BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#2A2A35}">
-                            <Image x:Name="FoodImageView" Aspect="AspectFill" />
-                        </Border>
-                    </HorizontalStackLayout>
-                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#EEEEEE, Dark=#333333}" />
-                    <Button Text="📍 Tag Current Location" Clicked="OnGetLocationClicked"
-                            BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
-                            CornerRadius="10" FontAttributes="Bold" />
-                    <Label x:Name="LocationLabel" Text="No location tagged." FontSize="14"
-                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
-                           FontAttributes="Italic" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- ═══════════════════════════════════════════════ -->
+        <!--  Premium Header                                 -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <Border Grid.Row="0" StrokeThickness="0" Padding="20,18,20,14"
+                StrokeShape="RoundRectangle 0,0,24,24"
+                BackgroundColor="{AppThemeBinding Light={StaticResource HeaderLight}, Dark={StaticResource HeaderDark}}">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Opacity="0.08" Radius="12" />
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" RowSpacing="4">
+                <!-- Back button -->
+                <Border Grid.Row="0" Grid.Column="0" Padding="8,4" Margin="0,0,8,0"
+                        StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Border.GestureRecognizers>
+                    <Label Text="&#xf15b;" FontFamily="FluentIcons" FontSize="18"
+                           TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" VerticalOptions="Center" />
+                </Border>
+                <!-- Title -->
+                <Label Grid.Row="0" Grid.Column="1" Text="New Food Item" 
+                       FontSize="24" FontAttributes="Bold" FontFamily="PlayfairBold"
+                       CharacterSpacing="0.5" HorizontalOptions="Start" VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="Add a new food or drink to your collection" 
+                       FontSize="13" Margin="0,0,12,2" LineBreakMode="WordWrap"
+                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+            </Grid>
+        </Border>
 
-            <!-- ── Basic Info Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="📋 Basic Info" FontSize="16" FontAttributes="Bold" />
-                    <Entry x:Name="NameEntry" Placeholder="Name (Required)" />
-                    <Picker x:Name="CategoryPicker" Title="Select Category (Required)">
-                        <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>Breakfast</x:String>
-                                <x:String>Lunch</x:String>
-                                <x:String>Dinner</x:String>
-                                <x:String>Drink</x:String>
-                                <x:String>Snack</x:String>
-                                <x:String>Dessert</x:String>
-                            </x:Array>
-                        </Picker.ItemsSource>
-                    </Picker>
-                    <Editor x:Name="DescriptionEditor" Placeholder="Description" HeightRequest="80" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- ═══════════════════════════════════════════════ -->
+        <!--  Scrollable Content                             -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12" Padding="16,12,16,30">
 
-            <!-- ── Nutrition Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="🔥 Nutrition" FontSize="16" FontAttributes="Bold" />
-                    <Entry x:Name="CaloriesEntry" Placeholder="Calories (kcal) - Must be positive number" Keyboard="Numeric" />
-                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="10">
-                        <Entry Grid.Column="0" x:Name="ProteinEntry" Placeholder="Protein (g)" Keyboard="Numeric" />
-                        <Entry Grid.Column="1" x:Name="CarbsEntry" Placeholder="Carbs (g)" Keyboard="Numeric" />
-                        <Entry Grid.Column="2" x:Name="FatEntry" Placeholder="Fat (g)" Keyboard="Numeric" />
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
+                <!-- ── Media & Location Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xf254;" FontFamily="FluentIcons" FontSize="16"
+                                   TextColor="{StaticResource AccentPurple}" VerticalOptions="Center" />
+                            <Label Text="Media &amp; Location" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                            <Button Grid.Column="0" Text="Take Photo" Clicked="OnTakePhotoClicked"
+                                    BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
+                                    CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
+                            <Border Grid.Column="1" x:Name="ThumbnailBorder" StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource DividerLight}, Dark={StaticResource DividerDark}}"
+                                    HeightRequest="44" WidthRequest="44"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}">
+                                <Grid>
+                                    <Label x:Name="DefaultFoodIcon" Text="&#xf254;" FontFamily="FluentIcons" FontSize="20"
+                                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                    <Image x:Name="FoodImageView" Aspect="AspectFill" IsVisible="False" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource DividerLight}, Dark={StaticResource DividerDark}}" />
+                        <Button Text="Tag Location" Clicked="OnGetLocationClicked"
+                                BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
+                                CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
+                        <Label x:Name="LocationLabel" Text="No location tagged." FontSize="13"
+                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
+                               FontAttributes="Italic" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <!-- ── Extra Info Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="🏷️ Extra Details" FontSize="16" FontAttributes="Bold" />
-                    <Entry x:Name="AllergyEntry" Placeholder="Allergy Note (e.g. Dairy, Nuts)" />
-                    <Entry x:Name="TagsEntry" Placeholder="Tags (e.g. Healthy, Spicy)" />
-                </VerticalStackLayout>
-            </Border>
+                <!-- ── Basic Info Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xe30a;" FontFamily="FluentIcons" FontSize="16"
+                                   TextColor="{StaticResource AccentBlue}" VerticalOptions="Center" />
+                            <Label Text="Basic Info" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Entry x:Name="NameEntry" Placeholder="Name (Required)" />
+                        <Picker x:Name="CategoryPicker" Title="Select Food Type (Required)">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Grain</x:String>
+                                    <x:String>Meat</x:String>
+                                    <x:String>Vegetable</x:String>
+                                    <x:String>Fruit</x:String>
+                                    <x:String>Dairy</x:String>
+                                    <x:String>Seafood</x:String>
+                                    <x:String>Beverage</x:String>
+                                    <x:String>Dessert</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        <Editor x:Name="DescriptionEditor" Placeholder="Description (optional)" HeightRequest="70" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <!-- Save Button -->
-            <Button Text="✅ Save Record" BackgroundColor="{StaticResource AccentGreen}" TextColor="White"
-                    Clicked="OnSaveClicked" Margin="0,10,0,0" CornerRadius="14"
-                    FontSize="18" FontAttributes="Bold" HeightRequest="54" />
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- ── Nutrition Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xf320;" FontFamily="FluentIcons" FontSize="16"
+                                   TextColor="{StaticResource AccentOrange}" VerticalOptions="Center" />
+                            <Label Text="Nutrition" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Entry x:Name="CaloriesEntry" Placeholder="Calories (kcal)" Keyboard="Numeric" />
+                        <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                            <Entry Grid.Column="0" x:Name="ProteinEntry" Placeholder="Protein (g)" Keyboard="Numeric" />
+                            <Entry Grid.Column="1" x:Name="CarbsEntry" Placeholder="Carbs (g)" Keyboard="Numeric" />
+                            <Entry Grid.Column="2" x:Name="FatEntry" Placeholder="Fat (g)" Keyboard="Numeric" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Extra Info Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xed0e;" FontFamily="FluentIcons" FontSize="16"
+                                   TextColor="{StaticResource AccentAmber}" VerticalOptions="Center" />
+                            <Label Text="Extra Details" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Entry x:Name="AllergyEntry" Placeholder="Allergy Note (e.g. Dairy, Nuts)" />
+                        <Entry x:Name="TagsEntry" Placeholder="Tags (e.g. Healthy, Spicy)" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Save Button -->
+                <Button Text="Save Food Item" BackgroundColor="{StaticResource AccentGreen}" TextColor="White"
+                        Clicked="OnSaveClicked" Margin="0,6,0,0" CornerRadius="14"
+                        FontSize="17" FontAttributes="Bold" MinimumHeightRequest="52" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

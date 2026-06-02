@@ -2,75 +2,102 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FoodDrinkApp.Views.MainPage"
-             Title="Food &amp; Drink Assistant"
+             Title="Tasty Meal Planner"
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid>
+        <!-- ── Main content layer ── -->
+        <Grid RowDefinitions="Auto, *">
 
-        <!-- ═══════════════════════════════════════════════ -->
-        <!--  Premium Header with app title + search + add  -->
-        <!-- ═══════════════════════════════════════════════ -->
-        <Grid Grid.Row="0" Padding="20,16,20,8" ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto"
-              BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-            
-            <!-- App Title -->
-            <Label Grid.Row="0" Grid.Column="0" Text="Tasty Meal Planner" 
-                   FontSize="28" FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
-            
-            <!-- Add Button (top-right) -->
-            <Border Grid.Row="0" Grid.Column="1" WidthRequest="44" HeightRequest="44"
-                    StrokeShape="RoundRectangle 22" StrokeThickness="0"
-                    BackgroundColor="{StaticResource AccentPurple}"
-                    VerticalOptions="Center">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnAddClicked" />
-                </Border.GestureRecognizers>
-                <Label Text="+" TextColor="White" FontSize="26" FontAttributes="Bold"
-                       HorizontalOptions="Center" VerticalOptions="Center" />
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Premium Header                                -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,18,20,12"
+                    StrokeShape="RoundRectangle 0,0,24,24"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource HeaderLight}, Dark={StaticResource HeaderDark}}">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Opacity="0.08" Radius="12" />
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, Auto" RowSpacing="4">
+                    <!-- App Title with icon -->
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto, *" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="&#xf1ec;" FontFamily="FluentIcons" FontSize="24"
+                               TextColor="{StaticResource AccentPurple}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="Tasty Meal Planner" 
+                               FontSize="26" FontAttributes="Bold" FontFamily="PlayfairBold"
+                               CharacterSpacing="0.5" LineBreakMode="WordWrap"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                    </Grid>
+                    
+                    <!-- Subtitle -->
+                    <Label Grid.Row="1" Text="Discover and track your meals" 
+                           FontSize="13" Margin="0,0,12,8" LineBreakMode="WordWrap"
+                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                    
+                    <!-- Search Bar -->
+                    <Border Grid.Row="2" StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}"
+                            Padding="0">
+                        <SearchBar x:Name="FoodSearchBar" 
+                                   Placeholder="Search foods, categories, or tags..." 
+                                   SearchButtonPressed="OnSearchPressed"
+                                   BackgroundColor="Transparent" />
+                    </Border>
+                </Grid>
             </Border>
-            
-            <!-- Subtitle -->
-            <Label Grid.Row="1" Grid.ColumnSpan="2" Text="Discover what to cook today" 
-                   FontSize="14" Margin="0,2,0,10"
-                   TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-            
-            <!-- Search Bar -->
-            <SearchBar Grid.Row="2" Grid.ColumnSpan="2" x:Name="FoodSearchBar" 
-                       Placeholder="Search foods, categories, or tags..." 
-                       SearchButtonPressed="OnSearchPressed"
-                       BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#2A2A35}" />
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Main scrollable content area                  -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <RefreshView Grid.Row="1" x:Name="FoodRefreshView" Refreshing="OnRefreshing">
+                <ScrollView>
+                    <VerticalStackLayout x:Name="ContentArea" Spacing="0" Padding="0,10,0,24">
+                        
+                        <!-- ── Today's Summary Card ── -->
+                        <Border Margin="16,6,16,10" Padding="18,16" StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="8" />
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="5">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="&#xe2dd;" FontFamily="FluentIcons" FontSize="18"
+                                           TextColor="{StaticResource AccentPurple}" VerticalOptions="Center" />
+                                    <Label Text="Today's Summary" FontSize="17" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                                </HorizontalStackLayout>
+                                <Label x:Name="TotalCountLabel" Text="Loading..." FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                <Label x:Name="TotalCaloriesLabel" Text="" FontSize="13"
+                                       TextColor="{StaticResource AccentOrange}" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- ── Dynamic category sections are populated in code-behind ── -->
+                        <VerticalStackLayout x:Name="CategoriesContainer" Spacing="2" />
+                        
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
         </Grid>
 
         <!-- ═══════════════════════════════════════════════ -->
-        <!--  Main scrollable content area                  -->
+        <!--  Floating Action Button (FAB)                  -->
         <!-- ═══════════════════════════════════════════════ -->
-        <RefreshView Grid.Row="1" x:Name="FoodRefreshView" Refreshing="OnRefreshing">
-            <ScrollView>
-                <VerticalStackLayout x:Name="ContentArea" Spacing="0" Padding="0,8,0,20">
-                    
-                    <!-- ── Today's Summary Card ── -->
-                    <Border Margin="20,10,20,15" Padding="20" StrokeShape="RoundRectangle 16" StrokeThickness="0"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                        <Border.Shadow>
-                            <Shadow Brush="Black" Offset="0,2" Opacity="0.08" Radius="8" />
-                        </Border.Shadow>
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="Today's Summary" FontSize="20" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
-                            <Label x:Name="TotalCountLabel" Text="Loading..." FontSize="14"
-                                   TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                            <Label x:Name="TotalCaloriesLabel" Text="" FontSize="14"
-                                   TextColor="{StaticResource AccentOrange}" FontAttributes="Bold" />
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- ── Dynamic category sections are populated in code-behind ── -->
-                    <VerticalStackLayout x:Name="CategoriesContainer" Spacing="5" />
-                    
-                </VerticalStackLayout>
-            </ScrollView>
-        </RefreshView>
+        <Border WidthRequest="56" HeightRequest="56"
+                StrokeShape="RoundRectangle 28" StrokeThickness="0"
+                BackgroundColor="{StaticResource AccentPurple}"
+                HorizontalOptions="End" VerticalOptions="End"
+                Margin="0,0,20,20">
+            <Border.Shadow>
+                <Shadow Brush="{StaticResource AccentPurple}" Offset="0,4" Opacity="0.35" Radius="12" />
+            </Border.Shadow>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAddClicked" />
+            </Border.GestureRecognizers>
+            <Label Text="&#xf109;" FontFamily="FluentIcons" TextColor="White" FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
     </Grid>
 </ContentPage>

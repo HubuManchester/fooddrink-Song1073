@@ -33,10 +33,20 @@
     <!-- Card & surface colours -->
     <Color x:Key="CardLight">#FFFFFF</Color>
     <Color x:Key="CardDark">#1E1E2E</Color>
-    <Color x:Key="SurfaceLight">#FAFAFA</Color>
-    <Color x:Key="SurfaceDark">#121218</Color>
-    <Color x:Key="SubtextLight">#757575</Color>
-    <Color x:Key="SubtextDark">#9E9E9E</Color>
+    <Color x:Key="SurfaceLight">#F2F3F7</Color>
+    <Color x:Key="SurfaceDark">#0F0F18</Color>
+    <Color x:Key="SubtextLight">#6B7280</Color>
+    <Color x:Key="SubtextDark">#9CA3AF</Color>
+    
+    <!-- Header gradient tones -->
+    <Color x:Key="HeaderLight">#FAFBFF</Color>
+    <Color x:Key="HeaderDark">#16162A</Color>
+    
+    <!-- Input field styles -->
+    <Color x:Key="InputBgLight">#EEF0F6</Color>
+    <Color x:Key="InputBgDark">#1E1E32</Color>
+    <Color x:Key="DividerLight">#E5E7EB</Color>
+    <Color x:Key="DividerDark">#2A2A42</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

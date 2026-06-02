@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.ProfilePage"
+             Title="Profile"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+
+    <Grid>
+        <!-- ── Main content layer ── -->
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Header                                         -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,18,20,14"
+                    StrokeShape="RoundRectangle 0,0,24,24"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource HeaderLight}, Dark={StaticResource HeaderDark}}">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Opacity="0.08" Radius="12" />
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto" RowSpacing="4">
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto, *" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="&#xf5bd;" FontFamily="FluentIcons" FontSize="22"
+                               TextColor="{StaticResource AccentPurple}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="My Profile" 
+                               FontSize="26" FontAttributes="Bold" FontFamily="PlayfairBold"
+                               CharacterSpacing="0.5" LineBreakMode="WordWrap"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                    </Grid>
+                    <Label Grid.Row="1" Text="Track your daily calorie needs" 
+                           FontSize="13" Margin="0,0,12,2" LineBreakMode="WordWrap"
+                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                </Grid>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Scrollable Content                             -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Spacing="12" Padding="16,12,16,30">
+
+                    <!-- ── Active Profile Calorie Dashboard ── -->
+                    <Border x:Name="CalorieDashboard" Padding="18,16" StrokeShape="RoundRectangle 18" StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,3" Opacity="0.08" Radius="10" />
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="&#xf443;" FontFamily="FluentIcons" FontSize="18"
+                                       TextColor="{StaticResource AccentOrange}" VerticalOptions="Center" />
+                                <Label Text="Today's Calorie Budget" FontSize="18" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                            </HorizontalStackLayout>
+                            <Label x:Name="ActiveProfileLabel" Text="No profile set" FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                            
+                            <!-- Big calorie number -->
+                            <Grid ColumnDefinitions="*, Auto" Margin="0,4,0,0">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label x:Name="CalorieTargetLabel" Text="—" FontSize="40" FontAttributes="Bold"
+                                           TextColor="{StaticResource AccentOrange}" />
+                                    <Label Text="kcal / day" FontSize="13"
+                                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                    <Label x:Name="GoalIconLabel" Text="&#xe11c;" FontFamily="FluentIcons" FontSize="34"
+                                           TextColor="{StaticResource AccentPurple}" HorizontalOptions="Center" />
+                                    <Label x:Name="GoalLabel" Text="Maintain" FontSize="12" FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource AccentPurple}" />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Macro breakdown -->
+                            <Border StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="14"
+                                    BackgroundColor="{AppThemeBinding Light=#F5F0FF, Dark=#221D35}">
+                                <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                        <Label Text="&#xf362;" FontFamily="FluentIcons" FontSize="18" HorizontalOptions="Center"
+                                               TextColor="{StaticResource AccentBlue}" />
+                                        <Label x:Name="ProteinLabel" Text="—" FontSize="16" FontAttributes="Bold"
+                                               HorizontalOptions="Center" TextColor="{StaticResource AccentBlue}" />
+                                        <Label Text="Protein" FontSize="11" HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                        <Label Text="&#xf1ec;" FontFamily="FluentIcons" FontSize="18" HorizontalOptions="Center"
+                                               TextColor="{StaticResource AccentAmber}" />
+                                        <Label x:Name="CarbsLabel" Text="—" FontSize="16" FontAttributes="Bold"
+                                               HorizontalOptions="Center" TextColor="{StaticResource AccentAmber}" />
+                                        <Label Text="Carbs" FontSize="11" HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
+                                        <Label Text="&#xe472;" FontFamily="FluentIcons" FontSize="18" HorizontalOptions="Center"
+                                               TextColor="{StaticResource AccentPink}" />
+                                        <Label x:Name="FatLabel" Text="—" FontSize="16" FontAttributes="Bold"
+                                               HorizontalOptions="Center" TextColor="{StaticResource AccentPink}" />
+                                        <Label Text="Fat" FontSize="11" HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+
+                            <!-- Location + last refresh -->
+                            <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
+                                <Label x:Name="LocationLabel" Grid.Column="0" Text="No location set" FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
+                                       VerticalOptions="Center" />
+                                <Label x:Name="RefreshDateLabel" Grid.Column="1" Text="" FontSize="11"
+                                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ── Profile List ── -->
+                    <HorizontalStackLayout Spacing="8" Margin="2,4,0,0">
+                        <Label Text="&#xf5bd;" FontFamily="FluentIcons" FontSize="16"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" VerticalOptions="Center" />
+                        <Label Text="Saved Profiles" FontSize="17" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                    </HorizontalStackLayout>
+                    <VerticalStackLayout x:Name="ProfileListContainer" Spacing="8" />
+
+                    <!-- ── Empty state ── -->
+                    <Border x:Name="EmptyState" Padding="30" StrokeShape="RoundRectangle 16" StrokeThickness="0" IsVisible="False"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="&#xf5bd;" FontFamily="FluentIcons" FontSize="48" HorizontalOptions="Center"
+                                   TextColor="{StaticResource AccentPurple}" />
+                            <Label Text="No profiles yet" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                            <Label Text="Tap the + button to create your first profile and start tracking."
+                                   FontSize="13" HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!--  Floating Action Button (FAB)                  -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <Border WidthRequest="56" HeightRequest="56"
+                StrokeShape="RoundRectangle 28" StrokeThickness="0"
+                BackgroundColor="{StaticResource AccentPurple}"
+                HorizontalOptions="End" VerticalOptions="End"
+                Margin="0,0,20,20">
+            <Border.Shadow>
+                <Shadow Brush="{StaticResource AccentPurple}" Offset="0,4" Opacity="0.35" Radius="12" />
+            </Border.Shadow>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAddProfileClicked" />
+            </Border.GestureRecognizers>
+            <Label Text="&#xf109;" FontFamily="FluentIcons" TextColor="White" FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
+    </Grid>
+</ContentPage>

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Maui.Controls.Shapes;
 using FoodDrinkApp.Models;
 using FoodDrinkApp.Services;
+using FoodDrinkApp.Helpers;
 
 namespace FoodDrinkApp.Views;
 
@@ -27,10 +28,24 @@ public partial class MainPage : ContentPage
 
         _allFoods = await FoodCatalogService.GetFoodsAsync(query);
 
-        // Update summary card
-        TotalCountLabel.Text = $"📋 {_allFoods.Count} items in your collection";
-        var totalCal = _allFoods.Sum(f => f.Calories);
-        TotalCaloriesLabel.Text = $"🔥 Total: {totalCal:N0} kcal across all items";
+        // Update summary card with today's diet progress
+        var profile = ProfileService.GetActiveProfile();
+        double consumed = DietRecordService.GetTodayTotalCalories();
+
+        if (profile != null)
+        {
+            ProfileService.RefreshDailyCalories(profile);
+            double remaining = profile.DailyCalorieTarget - consumed;
+            TotalCountLabel.Text = $"{_allFoods.Count} foods available  ·  {profile.Name}";
+            TotalCaloriesLabel.Text = remaining >= 0
+                ? $"{consumed:N0} / {profile.DailyCalorieTarget:N0} kcal  ·  {remaining:N0} remaining"
+                : $"{consumed:N0} / {profile.DailyCalorieTarget:N0} kcal  ·  {Math.Abs(remaining):N0} over!";
+        }
+        else
+        {
+            TotalCountLabel.Text = $"{_allFoods.Count} items in your collection";
+            TotalCaloriesLabel.Text = "Set up a profile to track daily calories";
+        }
 
         // Build category sections
         BuildCategorySections(_allFoods);
@@ -82,6 +97,8 @@ public partial class MainPage : ContentPage
                 Text = categoryName,
                 FontSize = 20,
                 FontAttributes = FontAttributes.Bold,
+                FontFamily = "SegoeSemibold",
+                CharacterSpacing = 0.3,
                 VerticalOptions = LayoutOptions.Center
             });
             headerGrid.SetColumn(titleLayout, 0);
@@ -94,7 +111,7 @@ public partial class MainPage : ContentPage
                 FontSize = 13,
                 VerticalOptions = LayoutOptions.Center,
                 TextColor = Application.Current?.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#9E9E9E") : Color.FromArgb("#757575")
+                    ? Color.FromArgb("#9CA3AF") : Color.FromArgb("#6B7280")
             };
             headerGrid.SetColumn(subtitleLabel, 1);
             headerGrid.Children.Add(subtitleLabel);
@@ -106,10 +123,10 @@ public partial class MainPage : ContentPage
             {
                 Orientation = ScrollOrientation.Horizontal,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
-                Padding = new Thickness(15, 5, 0, 10)
+                Padding = new Thickness(16, 4, 0, 8)
             };
 
-            var cardRow = new HorizontalStackLayout { Spacing = 12 };
+            var cardRow = new HorizontalStackLayout { Spacing = 10 };
 
             foreach (var food in items)
             {
@@ -128,19 +145,19 @@ public partial class MainPage : ContentPage
     {
         var cardBorder = new Border
         {
-            WidthRequest = 145,
-            StrokeShape = new RoundRectangle { CornerRadius = 14 },
+            WidthRequest = 156,
+            StrokeShape = new RoundRectangle { CornerRadius = 16 },
             StrokeThickness = 0,
             Padding = 0,
             BackgroundColor = Application.Current?.RequestedTheme == AppTheme.Dark
-                ? Color.FromArgb("#1E1E2E") : Colors.White
+                ? Color.FromArgb("#1C1C30") : Colors.White
         };
         cardBorder.Shadow = new Shadow
         {
             Brush = Brush.Black,
-            Offset = new Point(0, 2),
-            Opacity = 0.1f,
-            Radius = 6
+            Offset = new Point(0, 3),
+            Opacity = 0.08f,
+            Radius = 8
         };
 
         var cardContent = new VerticalStackLayout { Spacing = 0 };
@@ -148,8 +165,8 @@ public partial class MainPage : ContentPage
         // ── Image area with category badge overlay ──
         var imageContainer = new Grid
         {
-            HeightRequest = 100,
-            WidthRequest = 145
+            HeightRequest = 110,
+            WidthRequest = 156
         };
 
         // Placeholder background with category icon
@@ -160,22 +177,24 @@ public partial class MainPage : ContentPage
         };
         imageContainer.Children.Add(placeholderBg);
 
-        // Category emoji as large icon in centre
-        var emojiLabel = new Label
+        // Category icon in centre (FluentUI font)
+        var iconLabel = new Label
         {
             Text = food.CategoryIcon,
+            FontFamily = AppIcons.FontFamily,
             FontSize = 36,
             HorizontalOptions = LayoutOptions.Center,
-            VerticalOptions = LayoutOptions.Center
+            VerticalOptions = LayoutOptions.Center,
+            TextColor = food.CategoryBadgeColor
         };
-        imageContainer.Children.Add(emojiLabel);
+        imageContainer.Children.Add(iconLabel);
 
-        // If image path is available, show the actual image
-        if (!string.IsNullOrEmpty(food.ImagePath))
+        // If image is available, show the actual image (supports both URLs and local files)
+        if (food.HasImage)
         {
             var foodImage = new Image
             {
-                Source = ImageSource.FromFile(food.ImagePath),
+                Source = food.ResolvedImageSource,
                 Aspect = Aspect.AspectFill
             };
             imageContainer.Children.Add(foodImage);
@@ -224,7 +243,7 @@ public partial class MainPage : ContentPage
             Text = food.CaloriesLabel,
             FontSize = 11,
             TextColor = Application.Current?.RequestedTheme == AppTheme.Dark
-                ? Color.FromArgb("#9E9E9E") : Color.FromArgb("#757575")
+                ? Color.FromArgb("#9CA3AF") : Color.FromArgb("#6B7280")
         });
 
         cardContent.Children.Add(textArea);

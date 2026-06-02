@@ -19,6 +19,11 @@ public partial class AddItemPage : ContentPage
         AccessibilityService.ApplyFontScale(this);
     }
 
+    private async void OnBackClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
     private async void OnTakePhotoClicked(object? sender, EventArgs e)
     {
         try
@@ -35,7 +40,8 @@ public partial class AddItemPage : ContentPage
 
                     _currentImagePath = localFilePath;
                     FoodImageView.Source = ImageSource.FromFile(localFilePath);
-                    ThumbnailBorder.IsVisible = true;
+                    FoodImageView.IsVisible = true;
+                    DefaultFoodIcon.IsVisible = false;
                 }
             }
         }
@@ -66,7 +72,7 @@ public partial class AddItemPage : ContentPage
                 {
                     _currentLocation = $"Lat: {location.Latitude:F2}, Lon: {location.Longitude:F2}";
                 }
-                LocationLabel.Text = $"📍 {_currentLocation}";
+                LocationLabel.Text = _currentLocation;
                 LocationLabel.TextColor = Colors.DarkBlue;
             }
         }
@@ -81,15 +87,15 @@ public partial class AddItemPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(NameEntry.Text) || CategoryPicker.SelectedItem == null)
         {
-            await DisplayAlertAsync("Validation Error", "Name and Category are required.", "OK");
             try { Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(250)); } catch { }
+            await DisplayAlertAsync("Validation Error", "Name and Category are required.", "OK");
             return;
         }
 
         if (!double.TryParse(CaloriesEntry.Text, out double calories) || calories < 0)
         {
-            await DisplayAlertAsync("Validation Error", "Calories must be a valid non-negative number.", "OK");
             try { Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(250)); } catch { }
+            await DisplayAlertAsync("Validation Error", "Calories must be a valid non-negative number.", "OK");
             return;
         }
 

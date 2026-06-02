@@ -2,80 +2,121 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FoodDrinkApp.Views.HardwarePage"
-             Title="Hardware Demo"
+             Title="Device Features"
+             Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
-    <ScrollView>
-        <VerticalStackLayout Spacing="15" Padding="20,16,20,30">
-            
-            <!-- Header -->
-            <Label Text="📱 Mobile Hardware" FontSize="26" FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" HorizontalOptions="Start" />
-            <Label Text="Demonstrating device capabilities for high-tier grading."
-                   FontSize="14" Margin="0,0,0,5"
-                   TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
 
-            <!-- ── Camera Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="📷" FontSize="20" VerticalOptions="Center" />
-                        <Label Text="Camera" FontAttributes="Bold" FontSize="18" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                    <Button Text="Take a Food Photo" Clicked="OnTakePhotoClicked"
-                            BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
-                            CornerRadius="10" FontAttributes="Bold" />
-                    <Border StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                            HeightRequest="200" 
-                            BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2A2A35}">
-                        <Image x:Name="HardwareImageView" Aspect="AspectFit" />
-                    </Border>
-                </VerticalStackLayout>
-            </Border>
+    <Grid RowDefinitions="Auto, *">
 
-            <!-- ── Location Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="📍" FontSize="20" VerticalOptions="Center" />
-                        <Label Text="Location &amp; Geocoding" FontAttributes="Bold" FontSize="18" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                    <Button Text="Get Current Location" Clicked="OnGetLocationClicked"
-                            BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
-                            CornerRadius="10" FontAttributes="Bold" />
-                    <Label x:Name="CoordinateLabel" Text="Coordinates will appear here." FontSize="14"
-                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                    <Label x:Name="LocationLabel" Text="Address will appear here." FontSize="14"
-                           TextColor="{StaticResource AccentBlue}" FontAttributes="Bold" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- ═══════════════════════════════════════════════ -->
+        <!--  Premium Header                                 -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <Border Grid.Row="0" StrokeThickness="0" Padding="20,18,20,14"
+                StrokeShape="RoundRectangle 0,0,24,24"
+                BackgroundColor="{AppThemeBinding Light={StaticResource HeaderLight}, Dark={StaticResource HeaderDark}}">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Opacity="0.08" Radius="12" />
+            </Border.Shadow>
+            <VerticalStackLayout Spacing="4">
+                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                    <Label Text="&#xf5e0;" FontFamily="FluentIcons" FontSize="24"
+                           TextColor="{StaticResource AccentTeal}" VerticalOptions="Center" />
+                    <Label Text="Device Features" 
+                           FontSize="26" FontAttributes="Bold" FontFamily="PlayfairBold"
+                           CharacterSpacing="0.5"
+                           TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                </HorizontalStackLayout>
+                <Label Text="Test whether your device hardware features can be invoked correctly" 
+                       FontSize="13" Margin="0,0,0,2"
+                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+            </VerticalStackLayout>
+        </Border>
 
-            <!-- ── Haptic Card ── -->
-            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,1" Opacity="0.06" Radius="4" />
-                </Border.Shadow>
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="📳" FontSize="20" VerticalOptions="Center" />
-                        <Label Text="Haptic Feedback" FontAttributes="Bold" FontSize="18" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                    <Button Text="Test Haptic Click" Clicked="OnHapticClicked"
-                            BackgroundColor="{StaticResource AccentAmber}" TextColor="White"
-                            CornerRadius="10" FontAttributes="Bold" />
-                    <Label x:Name="FeedbackCountLabel" Text="Haptic tests: 0" FontSize="14"
-                           HorizontalOptions="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                </VerticalStackLayout>
-            </Border>
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- ═══════════════════════════════════════════════ -->
+        <!--  Scrollable Content                             -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12" Padding="16,12,16,30">
+
+                <!-- ── Camera Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xf254;" FontFamily="FluentIcons" FontSize="20"
+                                   TextColor="{StaticResource AccentPurple}" VerticalOptions="Center" />
+                            <Label Text="Camera Test" FontAttributes="Bold" FontSize="17" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Label Text="Verify camera hardware and flashlight are working. Flash will activate during capture."
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                        <Button Text="Take a Test Photo" Clicked="OnTakePhotoClicked"
+                                BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
+                                CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
+                        <Border StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                                HeightRequest="200" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}">
+                            <Image x:Name="HardwareImageView" Aspect="AspectFit" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Location Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xf4f8;" FontFamily="FluentIcons" FontSize="20"
+                                   TextColor="{StaticResource AccentTeal}" VerticalOptions="Center" />
+                            <Label Text="Location &amp; Geocoding Test" FontAttributes="Bold" FontSize="17" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Label Text="Verify GPS and reverse geocoding services. Results confirm the hardware is responding."
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                        <Button Text="Test GPS Location" Clicked="OnGetLocationClicked"
+                                BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
+                                CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
+                        <Label x:Name="CoordinateLabel" Text="Coordinates will appear here." FontSize="13"
+                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                        <Label x:Name="LocationLabel" Text="Address will appear here." FontSize="13"
+                               TextColor="{StaticResource AccentBlue}" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Haptic Card ── -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#xe968;" FontFamily="FluentIcons" FontSize="20"
+                                   TextColor="{StaticResource AccentAmber}" VerticalOptions="Center" />
+                            <Label Text="Haptic Feedback Test" FontAttributes="Bold" FontSize="17" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                        </HorizontalStackLayout>
+                        <Label Text="Tap the button below to test if the vibration motor responds correctly."
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                        <Button Text="Test Vibration Motor" Clicked="OnHapticClicked"
+                                BackgroundColor="{StaticResource AccentAmber}" TextColor="White"
+                                CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
+                        <Label x:Name="FeedbackCountLabel" Text="Haptic tests: 0" FontSize="13"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

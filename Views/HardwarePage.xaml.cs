@@ -17,26 +17,46 @@ public partial class HardwarePage : ContentPage
         AccessibilityService.ApplyFontScale(this);
     }
 
+    /// <summary>
+    /// Tests the camera hardware by capturing a photo with flashlight enabled.
+    /// The flash is turned on before capture and off after to verify both camera and flashlight work.
+    /// </summary>
     private async void OnTakePhotoClicked(object? sender, EventArgs e)
     {
         try
         {
-            if (MediaPicker.Default.IsCaptureSupported)
+            if (!MediaPicker.Default.IsCaptureSupported)
             {
-                FileResult? photo = await MediaPicker.Default.CapturePhotoAsync();
-                if (photo != null)
-                {
-                    var stream = await photo.OpenReadAsync();
-                    HardwareImageView.Source = ImageSource.FromStream(() => stream);
-                }
+                await DisplayAlert("Hardware Test", "Camera is not supported on this device.", "OK");
+                return;
+            }
+
+            // Turn on flash before capture
+            try { await Flashlight.Default.TurnOnAsync(); } catch { }
+
+            FileResult? photo = await MediaPicker.Default.CapturePhotoAsync();
+
+            // Turn off flash after capture
+            try { await Flashlight.Default.TurnOffAsync(); } catch { }
+
+            if (photo != null)
+            {
+                var stream = await photo.OpenReadAsync();
+                HardwareImageView.Source = ImageSource.FromStream(() => stream);
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"Could not open camera: {ex.Message}", "OK");
+            // Ensure flash is off even on error
+            try { await Flashlight.Default.TurnOffAsync(); } catch { }
+            await DisplayAlert("Camera Test Failed", $"Could not open camera: {ex.Message}", "OK");
         }
     }
 
+    /// <summary>
+    /// Tests GPS and geocoding hardware by fetching the current device location
+    /// and performing a reverse geocode lookup.
+    /// </summary>
     private async void OnGetLocationClicked(object? sender, EventArgs e)
     {
         try
@@ -55,13 +75,21 @@ public partial class HardwarePage : ContentPage
                 if (placemark != null)
                     LocationLabel.Text = $"{placemark.CountryName} / {placemark.AdminArea} / {placemark.Locality}";
             }
+            else
+            {
+                CoordinateLabel.Text = "GPS returned no data.";
+            }
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"Could not get location: {ex.Message}", "OK");
+            CoordinateLabel.Text = "GPS test failed.";
+            LocationLabel.Text = ex.Message;
         }
     }
 
+    /// <summary>
+    /// Tests the haptic / vibration motor hardware.
+    /// </summary>
     private void OnHapticClicked(object? sender, EventArgs e)
     {
         try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }

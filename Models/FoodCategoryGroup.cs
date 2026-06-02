@@ -3,6 +3,7 @@ namespace FoodDrinkApp.Models;
 /// <summary>
 /// Represents a category group for display in the main page's section-based layout.
 /// Each group has a title, subtitle, and a list of food items in that category.
+/// Categories are food types (Grain, Meat, Vegetable, etc.), NOT meal times.
 /// </summary>
 public class FoodCategoryGroup
 {
@@ -11,16 +12,18 @@ public class FoodCategoryGroup
     public List<FoodItem> Items { get; set; } = new();
 
     /// <summary>
-    /// Provides a contextual subtitle based on category.
+    /// Provides a contextual subtitle based on food type category.
     /// </summary>
     public static string GetSubtitleForCategory(string category) => category?.ToLower() switch
     {
-        "breakfast" => "Start your day right",
-        "lunch"     => "Midday fuel",
-        "dinner"    => "Evening favourites",
-        "drink"     => "Stay refreshed",
-        "snack"     => "Quick bites",
-        "dessert"   => "Sweet treats",
+        "grain"     => "Breads, rice & cereals",
+        "meat"      => "Poultry, beef & pork",
+        "vegetable" => "Fresh greens & veggies",
+        "fruit"     => "Nature's sweet treats",
+        "dairy"     => "Milk, cheese & yogurt",
+        "seafood"   => "Fish & shellfish",
+        "beverage"  => "Drinks & smoothies",
+        "dessert"   => "Sweet indulgences",
         _           => "Explore more",
     };
 }

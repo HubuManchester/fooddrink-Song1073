@@ -48,7 +48,39 @@ public partial class FoodDetailPage : ContentPage
         SpeechService.Stop();
     }
 
-    // 👇 處理詳情頁刪除按鈕點擊的邏輯 👇
+    // ── Add this food to today's diet record ──
+    private async void OnAddToDietClicked(object? sender, EventArgs e)
+    {
+        if (Item == null) return;
+
+        string? mealType = await DisplayActionSheet("Select Meal", "Cancel", null,
+            "Breakfast", "Lunch", "Dinner", "Snack");
+        if (string.IsNullOrEmpty(mealType) || mealType == "Cancel") return;
+
+        string? servingsStr = await DisplayPromptAsync("Servings",
+            $"How many servings of {Item.Name}?",
+            accept: "Add", cancel: "Cancel",
+            placeholder: "Enter servings", maxLength: 5,
+            keyboard: Keyboard.Numeric,
+            initialValue: "1");
+
+        if (string.IsNullOrWhiteSpace(servingsStr)) return;
+        if (!double.TryParse(servingsStr, out double servings) || servings <= 0)
+        {
+            await DisplayAlert("Invalid", "Servings must be a positive number.", "OK");
+            return;
+        }
+
+        var record = DietRecord.FromFoodItem(Item, mealType, servings);
+        DietRecordService.AddRecord(record);
+
+        try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
+        await DisplayAlert("Added!",
+            $"'{Item.Name}' × {servings:N1} added to {mealType}.\nTotal: {record.TotalCalories:N0} kcal",
+            "OK");
+    }
+
+    // ── Handle detail page delete button click ──
     private async void OnDeleteClicked(object? sender, EventArgs e)
     {
         if (Item != null)
@@ -58,7 +90,7 @@ public partial class FoodDetailPage : ContentPage
             {
                 try { Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
 
-                // 刪除後自動返回上一頁 (首頁)
+                // Automatically navigate back to the previous page (Home) after deletion
                 await FoodCatalogService.DeleteFoodAsync(Item.Id);
                 await Shell.Current.GoToAsync("..");
             }
