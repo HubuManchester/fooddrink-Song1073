@@ -3,7 +3,13 @@ namespace FoodDrinkApp.Services;
 public static class AccessibilityService
 {
     public static bool LargeTextEnabled { get; set; } = false;
-    private static readonly Dictionary<int, double> _originalSizes = new();
+
+    private class FontSizeData
+    {
+        public double Size { get; set; }
+    }
+
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Element, FontSizeData> _originalSizes = new();
 
     public static void ApplyFontScale(Element parent)
     {
@@ -72,13 +78,13 @@ public static class AccessibilityService
 
     private static void ProcessFontSize(Element element, double currentSize, Action<double> setSize)
     {
-        int hash = element.GetHashCode();
-        if (!_originalSizes.ContainsKey(hash))
+        if (!_originalSizes.TryGetValue(element, out var data))
         {
-            _originalSizes[hash] = currentSize;
+            data = new FontSizeData { Size = currentSize };
+            _originalSizes.Add(element, data);
         }
 
-        double baseSize = _originalSizes[hash];
+        double baseSize = data.Size;
         double newSize = LargeTextEnabled ? baseSize * 1.35 : baseSize;
         setSize(newSize);
     }
