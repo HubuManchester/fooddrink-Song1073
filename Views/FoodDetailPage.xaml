@@ -2,64 +2,362 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FoodDrinkApp.Views.FoodDetailPage"
-             Title="Nutritional Details">
+             Title="Nutritional Details"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="15" Margin="20">
+        <VerticalStackLayout Spacing="0">
 
-            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15" Margin="0,0,0,10">
-                <Border Grid.Column="0" Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" HeightRequest="80" WidthRequest="80" VerticalOptions="Start">
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border" Binding="{Binding ImagePath.Length}" Value="0">
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <!--  HERO HEADER – tall gradient with layered emoji icons  -->
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <Grid HeightRequest="300" BackgroundColor="{Binding CategoryBadgeColor}">
+
+                <!-- ── Layer 0: Category-colour base (always visible) ── -->
+                <BoxView Color="{Binding CategoryBadgeColor}" />
+
+                <!-- ── Layer 1a: Emoji fallback (shown when NO photo) ── -->
+                <Label x:Name="HeroEmojiBg" Text="{Binding CategoryIcon}" FontSize="130"
+                       HorizontalOptions="End" VerticalOptions="End"
+                       Margin="0,0,20,10" Opacity="0.15">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding HasImage}" Value="True">
                             <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
-                    </Border.Triggers>
-                    <Image Source="{Binding ImagePath}" Aspect="AspectFill" />
-                </Border>
+                    </Label.Triggers>
+                </Label>
+                <Label x:Name="HeroEmojiMain" Text="{Binding CategoryIcon}" FontSize="72"
+                       HorizontalOptions="Center" VerticalOptions="Center" Opacity="0.95">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding HasImage}" Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
 
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                    <Label Text="{Binding Name}" FontSize="28" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#333333, Dark=White}" />
-                    <Label Text="{Binding Category}" FontSize="18" TextColor="Gray" FontAttributes="Italic" />
-                    <Label Text="{Binding LocationText, StringFormat='📍 {0}'}" FontSize="14" TextColor="{AppThemeBinding Light=DarkBlue, Dark=LightBlue}" FontAttributes="Bold" Margin="0,5,0,0">
-                        <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding LocationText.Length}" Value="0">
-                                <Setter Property="IsVisible" Value="False" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
+                <!-- ── Layer 1b: Full-bleed photo (shown when photo exists) ── -->
+                <Image Source="{Binding ImagePath}" Aspect="AspectFill"
+                       HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image" Binding="{Binding HasImage}" Value="False">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+
+                <!-- ── Layer 2: Dark scrim for text readability ── -->
+                <BoxView Color="Black" Opacity="0.25" />
+
+                <!-- ── Layer 3: Top row – Back + Category badge ── -->
+                <Grid ColumnDefinitions="Auto, *, Auto" Margin="16,16,16,0"
+                      VerticalOptions="Start">
+
+                    <!-- Back button pill -->
+                    <Border Grid.Column="0" Padding="10,6"
+                            StrokeShape="RoundRectangle 20" StrokeThickness="0"
+                            BackgroundColor="#55000000">
+                        <Label Text="← Back" FontSize="14" TextColor="White"
+                               FontAttributes="Bold" VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBackTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+
+                    <!-- Category badge pill (top-right) -->
+                    <Border Grid.Column="2" Padding="14,6"
+                            StrokeShape="RoundRectangle 20" StrokeThickness="0"
+                            BackgroundColor="White" Opacity="0.92">
+                        <Label Text="{Binding Category}" FontSize="13" FontAttributes="Bold"
+                               TextColor="{Binding CategoryBadgeColor}" />
+                    </Border>
+                </Grid>
+
+                <!-- ── Layer 4: Bottom-left food name overlay (on photo) ── -->
+                <VerticalStackLayout VerticalOptions="End" HorizontalOptions="Start"
+                                     Margin="20,0,0,20" Spacing="2">
+                    <VerticalStackLayout.Triggers>
+                        <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding HasImage}" Value="False">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </VerticalStackLayout.Triggers>
+                    <Label Text="{Binding CategoryIcon}" FontSize="28" TextColor="White" />
                 </VerticalStackLayout>
             </Grid>
 
-            <BoxView HeightRequest="1" Color="Gray" Margin="0,10" />
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <!--  CONTENT AREA – overlaps hero with rounded top         -->
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <Border Margin="0,-28,0,0" Padding="20,28,20,30"
+                    StrokeShape="RoundRectangle 28,28,0,0" StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+                <VerticalStackLayout Spacing="20">
 
-            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto" RowSpacing="10">
-                <Label Grid.Row="0" Grid.Column="0" Text="Calories:" FontAttributes="Bold" FontSize="16" />
-                <Label Grid.Row="0" Grid.Column="1" Text="{Binding CaloriesLabel}" TextColor="Tomato" FontSize="16" FontAttributes="Bold" />
-                <Label Grid.Row="1" Grid.Column="0" Text="Protein:" FontAttributes="Bold" FontSize="16" />
-                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Protein, StringFormat='{0} g'}" FontSize="16" />
-                <Label Grid.Row="2" Grid.Column="0" Text="Carbs:" FontAttributes="Bold" FontSize="16" />
-                <Label Grid.Row="2" Grid.Column="1" Text="{Binding Carbs, StringFormat='{0} g'}" FontSize="16" />
-                <Label Grid.Row="3" Grid.Column="0" Text="Fat:" FontAttributes="Bold" FontSize="16" />
-                <Label Grid.Row="3" Grid.Column="1" Text="{Binding Fat, StringFormat='{0} g'}" FontSize="16" />
-            </Grid>
+                    <!-- ── Food name + location row ── -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{Binding Name}" FontSize="26" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
 
-            <BoxView HeightRequest="1" Color="Gray" Margin="0,10" />
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="📍" FontSize="14" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding LocationText.Length}" Value="0">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Text="{Binding LocationText}" FontSize="14"
+                                   TextColor="{StaticResource AccentBlue}" FontAttributes="Bold"
+                                   VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding LocationText.Length}" Value="0">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </HorizontalStackLayout>
 
-            <Label Text="Description:" FontAttributes="Bold" FontSize="16" />
-            <Label Text="{Binding Description}" FontSize="15" />
+                        <!-- Short calorie summary chip -->
+                        <Border Padding="10,5" Margin="0,4,0,0"
+                                StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3E2723}"
+                                HorizontalOptions="Start">
+                            <Label Text="{Binding ShortNutritionLabel}" FontSize="13"
+                                   TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}"
+                                   FontAttributes="Bold" />
+                        </Border>
+                    </VerticalStackLayout>
 
-            <Label Text="Allergy Note:" FontAttributes="Bold" FontSize="16" Margin="0,10,0,0" />
-            <Label Text="{Binding AllergyNote}" FontSize="15" TextColor="Tomato" />
+                    <!-- ═════════════════════════════════════════════ -->
+                    <!--  NUTRITION STATS – 2×2 card grid             -->
+                    <!-- ═════════════════════════════════════════════ -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Nutrition Facts" FontSize="18" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
 
-            <VerticalStackLayout Spacing="10" Margin="0,30,0,0">
-                <Button Text="🔊 Read Summary Aloud" Clicked="OnSpeakClicked" BackgroundColor="#2196F3" TextColor="White" CornerRadius="8" />
-                <Button Text="⏹ Stop Reading" Clicked="OnStopSpeakClicked" BackgroundColor="#757575" TextColor="White" CornerRadius="8" />
+                        <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto"
+                              ColumnSpacing="10" RowSpacing="10">
 
-                <BoxView HeightRequest="1" Color="LightGray" Margin="0,10" />
+                            <!-- Calories card -->
+                            <Border Grid.Row="0" Grid.Column="0" Padding="14"
+                                    StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                                </Border.Shadow>
+                                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                                    <Border WidthRequest="42" HeightRequest="42"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            BackgroundColor="#15FF6B35">
+                                        <Label Text="🔥" FontSize="20"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Calories, StringFormat='{0}'}"
+                                               FontSize="20" FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentOrange}" />
+                                        <Label Text="Calories" FontSize="11"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Border>
 
-                <Button Text="🗑️ Delete This Record" Clicked="OnDeleteClicked" BackgroundColor="#F44336" TextColor="White" CornerRadius="8" />
-            </VerticalStackLayout>
+                            <!-- Protein card -->
+                            <Border Grid.Row="0" Grid.Column="1" Padding="14"
+                                    StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                                </Border.Shadow>
+                                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                                    <Border WidthRequest="42" HeightRequest="42"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            BackgroundColor="#154CAF50">
+                                        <Label Text="💪" FontSize="20"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Protein, StringFormat='{0}g'}"
+                                               FontSize="20" FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentGreen}" />
+                                        <Label Text="Protein" FontSize="11"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Border>
 
+                            <!-- Carbs card -->
+                            <Border Grid.Row="1" Grid.Column="0" Padding="14"
+                                    StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                                </Border.Shadow>
+                                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                                    <Border WidthRequest="42" HeightRequest="42"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            BackgroundColor="#152196F3">
+                                        <Label Text="🌾" FontSize="20"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Carbs, StringFormat='{0}g'}"
+                                               FontSize="20" FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentBlue}" />
+                                        <Label Text="Carbs" FontSize="11"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Border>
+
+                            <!-- Fat card -->
+                            <Border Grid.Row="1" Grid.Column="1" Padding="14"
+                                    StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                                </Border.Shadow>
+                                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                                    <Border WidthRequest="42" HeightRequest="42"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            BackgroundColor="#15E91E63">
+                                        <Label Text="🥑" FontSize="20"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Fat, StringFormat='{0}g'}"
+                                               FontSize="20" FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentPink}" />
+                                        <Label Text="Fat" FontSize="11"
+                                               TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <!-- ═════════════════════════════════════════════ -->
+                    <!--  DESCRIPTION CARD – with accent side bar     -->
+                    <!-- ═════════════════════════════════════════════ -->
+                    <Border Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                        </Border.Shadow>
+                        <Grid ColumnDefinitions="5, *">
+                            <!-- Accent side bar -->
+                            <BoxView Grid.Column="0" Color="{Binding CategoryBadgeColor}"
+                                     CornerRadius="16,0,16,0" />
+                            <VerticalStackLayout Grid.Column="1" Spacing="8" Padding="16">
+                                <Label Text="📝  About This Dish" FontSize="16" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                                <Label Text="{Binding Description}" FontSize="15" LineHeight="1.6"
+                                       TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- ═════════════════════════════════════════════ -->
+                    <!--  ALLERGY ALERT – prominent warning banner     -->
+                    <!-- ═════════════════════════════════════════════ -->
+                    <Border Padding="16" StrokeShape="RoundRectangle 16"
+                            Stroke="{AppThemeBinding Light=#FFCC80, Dark=#5D4037}"
+                            StrokeThickness="1.5"
+                            BackgroundColor="{AppThemeBinding Light=#FFF8E1, Dark=#3E2723}">
+                        <Grid ColumnDefinitions="Auto, *" ColumnSpacing="14">
+                            <!-- Warning icon circle -->
+                            <Border Grid.Column="0"
+                                    WidthRequest="44" HeightRequest="44"
+                                    StrokeShape="RoundRectangle 22" StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=#FFE0B2, Dark=#4E342E}"
+                                    HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label Text="⚠️" FontSize="20"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                <Label Text="Allergy Information" FontSize="15" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}" />
+                                <Label Text="{Binding AllergyNote}" FontSize="14" LineHeight="1.4"
+                                       TextColor="{AppThemeBinding Light=#BF360C, Dark=#FFCC80}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- ═════════════════════════════════════════════ -->
+                    <!--  TAGS – horizontal chip-style display         -->
+                    <!-- ═════════════════════════════════════════════ -->
+                    <Border Padding="16" StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="🏷️" FontSize="16" VerticalOptions="Center" />
+                                <Label Text="Tags" FontSize="16" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Padding="10,6" StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="1.5"
+                                    Stroke="{StaticResource AccentPurple}"
+                                    BackgroundColor="{AppThemeBinding Light=#F3E5F5, Dark=#1A0033}"
+                                    HorizontalOptions="Start">
+                                <Label Text="{Binding Tags}" FontSize="14"
+                                       TextColor="{StaticResource AccentPurple}" FontAttributes="Bold" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ═════════════════════════════════════════════ -->
+                    <!--  ACCESSIBILITY ACTIONS – TTS controls         -->
+                    <!-- ═════════════════════════════════════════════ -->
+                    <Border Padding="16" StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Opacity="0.06" Radius="6" />
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="♿  Accessibility" FontSize="16" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                            <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                                <Button Grid.Column="0"
+                                        Text="🔊  Read Aloud" Clicked="OnSpeakClicked"
+                                        BackgroundColor="{StaticResource AccentBlue}" TextColor="White"
+                                        CornerRadius="12" FontAttributes="Bold" HeightRequest="48"
+                                        FontSize="14" />
+                                <Button Grid.Column="1"
+                                        Text="⏹  Stop" Clicked="OnStopSpeakClicked"
+                                        BackgroundColor="{AppThemeBinding Light=#ECEFF1, Dark=#37474F}"
+                                        TextColor="{AppThemeBinding Light=#37474F, Dark=#ECEFF1}"
+                                        CornerRadius="12" HeightRequest="48" FontSize="14" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ═════════════════════════════════════════════ -->
+                    <!--  DANGER ZONE – delete with clear separation   -->
+                    <!-- ═════════════════════════════════════════════ -->
+                    <Border Padding="16" StrokeShape="RoundRectangle 16"
+                            Stroke="{AppThemeBinding Light=#FFCDD2, Dark=#4E0000}"
+                            StrokeThickness="1"
+                            BackgroundColor="{AppThemeBinding Light=#FFF5F5, Dark=#2C0B0B}"
+                            Margin="0,4,0,0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="⚡ Danger Zone" FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource AccentRed}" />
+                            <Button Text="🗑️  Delete This Record" Clicked="OnDeleteClicked"
+                                    BackgroundColor="{StaticResource AccentRed}" TextColor="White"
+                                    CornerRadius="12" HeightRequest="48" FontAttributes="Bold"
+                                    FontSize="15" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

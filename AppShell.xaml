@@ -5,10 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FoodDrinkApp"
     xmlns:views="clr-namespace:FoodDrinkApp.Views"
-    Shell.FlyoutBehavior="Disabled">
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E2E}"
+    Shell.TabBarTitleColor="{AppThemeBinding Light=#512BD4, Dark=#ac99ea}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Light=#757575, Dark=#9E9E9E}">
 
     <TabBar>
-        <Tab Title="Food List" Icon="dotnet_bot.png">
+        <Tab Title="Home" Icon="dotnet_bot.png">
             <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
         </Tab>
         <Tab Title="Hardware" Icon="dotnet_bot.png">

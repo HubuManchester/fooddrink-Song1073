@@ -30,6 +30,11 @@ public partial class FoodDetailPage : ContentPage
         AccessibilityService.ApplyFontScale(this);
     }
 
+    private async void OnBackTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
     private async void OnSpeakClicked(object? sender, EventArgs e)
     {
         if (Item != null)

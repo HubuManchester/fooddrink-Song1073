@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
@@ -19,6 +19,24 @@
 
     <Color x:Key="LightSecondaryBackground">#E0E0E0</Color>
     <Color x:Key="DarkSecondaryBackground">#222228</Color>
+
+    <!-- Premium accent colours for the food app -->
+    <Color x:Key="AccentOrange">#FF6B35</Color>
+    <Color x:Key="AccentGreen">#4CAF50</Color>
+    <Color x:Key="AccentPink">#E91E63</Color>
+    <Color x:Key="AccentBlue">#2196F3</Color>
+    <Color x:Key="AccentPurple">#7C4DFF</Color>
+    <Color x:Key="AccentTeal">#00BCD4</Color>
+    <Color x:Key="AccentAmber">#FFA000</Color>
+    <Color x:Key="AccentRed">#F44336</Color>
+    
+    <!-- Card & surface colours -->
+    <Color x:Key="CardLight">#FFFFFF</Color>
+    <Color x:Key="CardDark">#1E1E2E</Color>
+    <Color x:Key="SurfaceLight">#FAFAFA</Color>
+    <Color x:Key="SurfaceDark">#121218</Color>
+    <Color x:Key="SubtextLight">#757575</Color>
+    <Color x:Key="SubtextDark">#9E9E9E</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
