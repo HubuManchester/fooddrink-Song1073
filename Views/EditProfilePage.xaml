@@ -24,7 +24,7 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}"
                         VerticalOptions="Center">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
                     </Border.GestureRecognizers>
                     <Label Text="&#xf15b;" FontFamily="FluentIcons" FontSize="18"
                            TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" VerticalOptions="Center" />
@@ -74,9 +74,9 @@
                                 <Label x:Name="DefaultAvatarIcon"
                                        Text="&#xf5bd;" FontFamily="FluentIcons" FontSize="44"
                                        TextColor="{StaticResource AccentPurple}"
-                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                       HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasNoImage}" />
                                 <Image x:Name="ProfileImagePreview" Aspect="AspectFill"
-                                       IsVisible="False"
+                                       IsVisible="{Binding HasImage}" Source="{Binding ImageSource}"
                                        WidthRequest="100" HeightRequest="100" />
                             </Grid>
                         </Border>
@@ -85,18 +85,18 @@
                         <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
                             <Button Grid.Column="0" Text="Take Photo"
                                     FontSize="12"
-                                    Clicked="OnTakeProfilePhotoClicked"
+                                    Command="{Binding TakeProfilePhotoCommand}"
                                     BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
                                     CornerRadius="10" MinimumHeightRequest="38" Padding="6,0" />
                             <Button Grid.Column="1" Text="Gallery"
                                     FontSize="12"
-                                    Clicked="OnPickProfilePhotoClicked"
+                                    Command="{Binding PickProfilePhotoCommand}"
                                     BackgroundColor="{StaticResource AccentBlue}" TextColor="White"
                                     CornerRadius="10" MinimumHeightRequest="38" Padding="6,0" />
                             <Button Grid.Column="2" x:Name="RemovePhotoBtn"
                                     Text="Remove"
                                     FontSize="12"
-                                    Clicked="OnRemoveProfilePhotoClicked"
+                                    Command="{Binding RemoveProfilePhotoCommand}"
                                     BackgroundColor="#F44336" TextColor="White"
                                     CornerRadius="10" MinimumHeightRequest="38" Padding="6,0" />
                         </Grid>
@@ -116,16 +116,9 @@
                             <Label Text="Basic Info" FontSize="15" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
-                        <Entry x:Name="NameEntry" Placeholder="Your Name (Required)" />
-                        <Picker x:Name="GenderPicker" Title="Select Gender (Required)">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Male</x:String>
-                                    <x:String>Female</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                        <Entry x:Name="AgeEntry" Placeholder="Age (years)" Keyboard="Numeric" />
+                        <Entry x:Name="NameEntry" Placeholder="Your Name (Required)" Text="{Binding Name}" />
+                        <Picker x:Name="GenderPicker" Title="Select Gender (Required)" ItemsSource="{Binding Genders}" SelectedItem="{Binding Gender}" />
+                        <Entry x:Name="AgeEntry" Placeholder="Age (years)" Keyboard="Numeric" Text="{Binding Age}" />
                     </VerticalStackLayout>
                 </Border>
 
@@ -143,8 +136,8 @@
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
                         <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
-                            <Entry Grid.Column="0" x:Name="HeightEntry" Placeholder="Height (cm)" Keyboard="Numeric" />
-                            <Entry Grid.Column="1" x:Name="WeightEntry" Placeholder="Weight (kg)" Keyboard="Numeric" />
+                            <Entry Grid.Column="0" x:Name="HeightEntry" Placeholder="Height (cm)" Keyboard="Numeric" Text="{Binding Height}" />
+                            <Entry Grid.Column="1" x:Name="WeightEntry" Placeholder="Weight (kg)" Keyboard="Numeric" Text="{Binding Weight}" />
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -162,26 +155,8 @@
                             <Label Text="Activity &amp; Goal" FontSize="15" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
-                        <Picker x:Name="ActivityPicker" Title="Activity Level (Required)">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Sedentary</x:String>
-                                    <x:String>Lightly Active</x:String>
-                                    <x:String>Moderately Active</x:String>
-                                    <x:String>Very Active</x:String>
-                                    <x:String>Extra Active</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                        <Picker x:Name="GoalPicker" Title="Goal (Required)">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Lose Weight</x:String>
-                                    <x:String>Maintain</x:String>
-                                    <x:String>Gain Weight</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
+                        <Picker x:Name="ActivityPicker" Title="Activity Level (Required)" ItemsSource="{Binding ActivityLevels}" SelectedItem="{Binding ActivityLevel}" />
+                        <Picker x:Name="GoalPicker" Title="Goal (Required)" ItemsSource="{Binding Goals}" SelectedItem="{Binding Goal}" />
                     </VerticalStackLayout>
                 </Border>
 
@@ -201,10 +176,10 @@
                         <Label Text="Used for climate-based calorie adjustment."
                                FontSize="12"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                        <Button Text="Get Location" Clicked="OnGetLocationClicked"
+                        <Button Text="Get Location" Command="{Binding GetLocationCommand}"
                                 BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
                                 CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
-                        <Label x:Name="LocationLabel" Text="No location set." FontSize="13"
+                        <Label x:Name="LocationLabel" Text="{Binding LocationText}" FontSize="13"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
                                FontAttributes="Italic" />
                     </VerticalStackLayout>
@@ -212,7 +187,7 @@
 
                 <!-- Save Button -->
                 <Button Text="Save Profile" BackgroundColor="{StaticResource AccentGreen}" TextColor="White"
-                        Clicked="OnSaveClicked" Margin="0,6,0,0" CornerRadius="14"
+                        Command="{Binding SaveCommand}" Margin="0,6,0,0" CornerRadius="14"
                         FontSize="17" FontAttributes="Bold" MinimumHeightRequest="52" />
 
             </VerticalStackLayout>

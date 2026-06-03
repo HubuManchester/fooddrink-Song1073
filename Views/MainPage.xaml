@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FoodDrinkApp.ViewModels"
              x:Class="FoodDrinkApp.Views.MainPage"
              Title="Tasty Meal Planner"
              Shell.NavBarIsVisible="False"
@@ -41,7 +42,8 @@
                             Padding="0">
                         <SearchBar x:Name="FoodSearchBar" 
                                    Placeholder="Search foods, categories, or tags..." 
-                                   SearchButtonPressed="OnSearchPressed"
+                                   SearchCommand="{Binding SearchCommand}"
+                                   Text="{Binding SearchQuery, Mode=TwoWay}"
                                    BackgroundColor="Transparent" />
                     </Border>
                 </Grid>
@@ -50,7 +52,7 @@
             <!-- ═══════════════════════════════════════════════ -->
             <!--  Main scrollable content area                  -->
             <!-- ═══════════════════════════════════════════════ -->
-            <RefreshView Grid.Row="1" x:Name="FoodRefreshView" Refreshing="OnRefreshing">
+            <RefreshView Grid.Row="1" x:Name="FoodRefreshView" Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing}">
                 <ScrollView>
                     <VerticalStackLayout x:Name="ContentArea" Spacing="0" Padding="0,10,0,24">
                         
@@ -67,15 +69,73 @@
                                     <Label Text="Today's Summary" FontSize="17" FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                                 </HorizontalStackLayout>
-                                <Label x:Name="TotalCountLabel" Text="Loading..." FontSize="13"
+                                <Label x:Name="TotalCountLabel" Text="{Binding TotalCountText}" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                                <Label x:Name="TotalCaloriesLabel" Text="" FontSize="13"
+                                <Label x:Name="TotalCaloriesLabel" Text="{Binding TotalCaloriesText}" FontSize="13"
                                        TextColor="{StaticResource AccentOrange}" FontAttributes="Bold" />
                             </VerticalStackLayout>
                         </Border>
 
-                        <!-- ── Dynamic category sections are populated in code-behind ── -->
-                        <VerticalStackLayout x:Name="CategoriesContainer" Spacing="2" />
+                        <!-- ── Dynamic category sections are populated via ViewModel ── -->
+                        <VerticalStackLayout x:Name="CategoriesContainer" Spacing="2" BindableLayout.ItemsSource="{Binding CategoryGroups}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <VerticalStackLayout>
+                                        <!-- Header Grid -->
+                                        <Grid ColumnDefinitions="*, Auto" Padding="20,15,20,5">
+                                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                                <BoxView WidthRequest="4" HeightRequest="22" CornerRadius="2"
+                                                         BackgroundColor="{Binding Items[0].CategoryBadgeColor}" VerticalOptions="Center" />
+                                                <Label Text="{Binding CategoryName}" FontSize="20" FontAttributes="Bold"
+                                                       FontFamily="SegoeSemibold" CharacterSpacing="0.3" VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+                                            <Label Grid.Column="1" Text="{Binding Subtitle}" FontSize="13" VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                        </Grid>
+
+                                        <!-- ScrollView and cards -->
+                                        <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,4,0,8">
+                                            <HorizontalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Items}">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border WidthRequest="156" StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="0"
+                                                                BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C30}">
+                                                            <Border.Shadow>
+                                                                <Shadow Brush="Black" Offset="0,3" Opacity="0.08" Radius="8" />
+                                                            </Border.Shadow>
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=GoToDetailCommand}" CommandParameter="{Binding .}" />
+                                                            </Border.GestureRecognizers>
+
+                                                            <VerticalStackLayout Spacing="0">
+                                                                <!-- Image Area -->
+                                                                <Grid HeightRequest="110" WidthRequest="156">
+                                                                    <BoxView BackgroundColor="{Binding CategoryBadgeBgColor}" CornerRadius="14,14,0,0" />
+                                                                    <Label Text="{Binding CategoryIcon}" FontFamily="FluentIcons" FontSize="36"
+                                                                           HorizontalOptions="Center" VerticalOptions="Center" TextColor="{Binding CategoryBadgeColor}" />
+                                                                    <Image Source="{Binding ResolvedImageSource}" Aspect="AspectFill" IsVisible="{Binding HasImage}" />
+                                                                    <!-- Badge overlay -->
+                                                                    <Border StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{Binding CategoryBadgeColor}"
+                                                                            Padding="8,3" HorizontalOptions="Start" VerticalOptions="Start" Margin="8,8,0,0">
+                                                                        <Label Text="{Binding Category}" FontSize="10" FontAttributes="Bold" TextColor="White" />
+                                                                    </Border>
+                                                                </Grid>
+
+                                                                <!-- Text Area -->
+                                                                <VerticalStackLayout Padding="10,8,10,10" Spacing="2">
+                                                                    <Label Text="{Binding Name}" FontSize="13" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="2" />
+                                                                    <Label Text="{Binding CaloriesLabel}" FontSize="11" TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                                                </VerticalStackLayout>
+                                                            </VerticalStackLayout>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </HorizontalStackLayout>
+                                        </ScrollView>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
                         
                     </VerticalStackLayout>
                 </ScrollView>
@@ -94,7 +154,7 @@
                 <Shadow Brush="{StaticResource AccentPurple}" Offset="0,4" Opacity="0.35" Radius="12" />
             </Border.Shadow>
             <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnAddClicked" />
+                <TapGestureRecognizer Command="{Binding AddNewItemCommand}" />
             </Border.GestureRecognizers>
             <Label Text="&#xf109;" FontFamily="FluentIcons" TextColor="White" FontSize="24"
                    HorizontalOptions="Center" VerticalOptions="Center" />

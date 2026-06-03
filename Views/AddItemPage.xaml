@@ -24,7 +24,7 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}"
                         VerticalOptions="Center">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
                     </Border.GestureRecognizers>
                     <Label Text="&#xf15b;" FontFamily="FluentIcons" FontSize="18"
                            TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" VerticalOptions="Center" />
@@ -60,7 +60,7 @@
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
                         <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
-                            <Button Grid.Column="0" Text="Take Photo" Clicked="OnTakePhotoClicked"
+                            <Button Grid.Column="0" Text="Take Photo" Command="{Binding TakePhotoCommand}"
                                     BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
                                     CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
                             <Border Grid.Column="1" x:Name="ThumbnailBorder" StrokeShape="RoundRectangle 10"
@@ -71,16 +71,16 @@
                                 <Grid>
                                     <Label x:Name="DefaultFoodIcon" Text="&#xf254;" FontFamily="FluentIcons" FontSize="20"
                                            TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
-                                           HorizontalOptions="Center" VerticalOptions="Center" />
-                                    <Image x:Name="FoodImageView" Aspect="AspectFill" IsVisible="False" />
+                                           HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasNoImage}" />
+                                    <Image x:Name="FoodImageView" Aspect="AspectFill" Source="{Binding ImageSource}" IsVisible="{Binding HasImage}" />
                                 </Grid>
                             </Border>
                         </Grid>
                         <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource DividerLight}, Dark={StaticResource DividerDark}}" />
-                        <Button Text="Tag Location" Clicked="OnGetLocationClicked"
-                                BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
-                                CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
-                        <Label x:Name="LocationLabel" Text="No location tagged." FontSize="13"
+                        <Button Text="Tag Location" Command="{Binding GetLocationCommand}"
+                                 BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
+                                 CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
+                        <Label x:Name="LocationLabel" Text="{Binding CurrentLocationText}" FontSize="13"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
                                FontAttributes="Italic" />
                     </VerticalStackLayout>
@@ -99,22 +99,9 @@
                             <Label Text="Basic Info" FontSize="15" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
-                        <Entry x:Name="NameEntry" Placeholder="Name (Required)" />
-                        <Picker x:Name="CategoryPicker" Title="Select Food Type (Required)">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Grain</x:String>
-                                    <x:String>Meat</x:String>
-                                    <x:String>Vegetable</x:String>
-                                    <x:String>Fruit</x:String>
-                                    <x:String>Dairy</x:String>
-                                    <x:String>Seafood</x:String>
-                                    <x:String>Beverage</x:String>
-                                    <x:String>Dessert</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                        <Editor x:Name="DescriptionEditor" Placeholder="Description (optional)" HeightRequest="70" />
+                        <Entry x:Name="NameEntry" Placeholder="Name (Required)" Text="{Binding Name}" />
+                        <Picker x:Name="CategoryPicker" Title="Select Food Type (Required)" ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" />
+                        <Editor x:Name="DescriptionEditor" Placeholder="Description (optional)" HeightRequest="70" Text="{Binding Description}" />
                     </VerticalStackLayout>
                 </Border>
 
@@ -131,11 +118,11 @@
                             <Label Text="Nutrition" FontSize="15" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
-                        <Entry x:Name="CaloriesEntry" Placeholder="Calories (kcal)" Keyboard="Numeric" />
+                        <Entry x:Name="CaloriesEntry" Placeholder="Calories (kcal)" Keyboard="Numeric" Text="{Binding Calories}" />
                         <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
-                            <Entry Grid.Column="0" x:Name="ProteinEntry" Placeholder="Protein (g)" Keyboard="Numeric" />
-                            <Entry Grid.Column="1" x:Name="CarbsEntry" Placeholder="Carbs (g)" Keyboard="Numeric" />
-                            <Entry Grid.Column="2" x:Name="FatEntry" Placeholder="Fat (g)" Keyboard="Numeric" />
+                            <Entry Grid.Column="0" x:Name="ProteinEntry" Placeholder="Protein (g)" Keyboard="Numeric" Text="{Binding Protein}" />
+                            <Entry Grid.Column="1" x:Name="CarbsEntry" Placeholder="Carbs (g)" Keyboard="Numeric" Text="{Binding Carbs}" />
+                            <Entry Grid.Column="2" x:Name="FatEntry" Placeholder="Fat (g)" Keyboard="Numeric" Text="{Binding Fat}" />
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -153,14 +140,14 @@
                             <Label Text="Extra Details" FontSize="15" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                         </HorizontalStackLayout>
-                        <Entry x:Name="AllergyEntry" Placeholder="Allergy Note (e.g. Dairy, Nuts)" />
-                        <Entry x:Name="TagsEntry" Placeholder="Tags (e.g. Healthy, Spicy)" />
+                        <Entry x:Name="AllergyEntry" Placeholder="Allergy Note (e.g. Dairy, Nuts)" Text="{Binding AllergyNote}" />
+                        <Entry x:Name="TagsEntry" Placeholder="Tags (e.g. Healthy, Spicy)" Text="{Binding Tags}" />
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- Save Button -->
                 <Button Text="Save Food Item" BackgroundColor="{StaticResource AccentGreen}" TextColor="White"
-                        Clicked="OnSaveClicked" Margin="0,6,0,0" CornerRadius="14"
+                        Command="{Binding SaveCommand}" Margin="0,6,0,0" CornerRadius="14"
                         FontSize="17" FontAttributes="Bold" MinimumHeightRequest="52" />
 
             </VerticalStackLayout>

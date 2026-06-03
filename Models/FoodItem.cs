@@ -66,6 +66,11 @@ public class FoodItem
     };
 
     /// <summary>
+    /// Returns the category color with 15% opacity for background tinting.
+    /// </summary>
+    public Color CategoryBadgeBgColor => CategoryBadgeColor.WithAlpha(0.15f);
+
+    /// <summary>
     /// Returns the Fluent UI icon glyph for the food type category.
     /// Used with FontFamily="FluentIcons" in code-behind.
     /// </summary>

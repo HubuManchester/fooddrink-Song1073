@@ -54,13 +54,13 @@
                         <Label Text="Verify camera hardware and flashlight are working. Flash will activate during capture."
                                FontSize="12"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                        <Button Text="Take a Test Photo" Clicked="OnTakePhotoClicked"
+                        <Button Text="Take a Test Photo" Command="{Binding TakePhotoCommand}"
                                 BackgroundColor="{StaticResource AccentPurple}" TextColor="White"
                                 CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
                         <Border StrokeShape="RoundRectangle 14" StrokeThickness="0"
                                 HeightRequest="200" 
                                 BackgroundColor="{AppThemeBinding Light={StaticResource InputBgLight}, Dark={StaticResource InputBgDark}}">
-                            <Image x:Name="HardwareImageView" Aspect="AspectFit" />
+                            <Image x:Name="HardwareImageView" Aspect="AspectFit" Source="{Binding HardwareImageSource}" />
                         </Border>
                     </VerticalStackLayout>
                 </Border>
@@ -81,12 +81,12 @@
                         <Label Text="Verify GPS and reverse geocoding services. Results confirm the hardware is responding."
                                FontSize="12"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                        <Button Text="Test GPS Location" Clicked="OnGetLocationClicked"
+                        <Button Text="Test GPS Location" Command="{Binding GetLocationCommand}"
                                 BackgroundColor="{StaticResource AccentTeal}" TextColor="White"
                                 CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
-                        <Label x:Name="CoordinateLabel" Text="Coordinates will appear here." FontSize="13"
+                        <Label x:Name="CoordinateLabel" Text="{Binding CoordinateText}" FontSize="13"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                        <Label x:Name="LocationLabel" Text="Address will appear here." FontSize="13"
+                        <Label x:Name="LocationLabel" Text="{Binding LocationText}" FontSize="13"
                                TextColor="{StaticResource AccentBlue}" FontAttributes="Bold" />
                     </VerticalStackLayout>
                 </Border>
@@ -107,10 +107,10 @@
                         <Label Text="Tap the button below to test if the vibration motor responds correctly."
                                FontSize="12"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                        <Button Text="Test Vibration Motor" Clicked="OnHapticClicked"
+                        <Button Text="Test Vibration Motor" Command="{Binding HapticCommand}"
                                 BackgroundColor="{StaticResource AccentAmber}" TextColor="White"
                                 CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="44" FontSize="14" />
-                        <Label x:Name="FeedbackCountLabel" Text="Haptic tests: 0" FontSize="13"
+                        <Label x:Name="FeedbackCountLabel" Text="{Binding FeedbackCountText}" FontSize="13"
                                HorizontalOptions="Center"
                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
                     </VerticalStackLayout>

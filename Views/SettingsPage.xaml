@@ -67,7 +67,7 @@
                                 <Label Text="Switch to a dark colour scheme." FontSize="12"
                                        TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
                             </VerticalStackLayout>
-                            <Switch x:Name="ThemeSwitch" Grid.Column="1" Toggled="OnThemeToggled"
+                            <Switch Grid.Column="1" IsToggled="{Binding IsDarkTheme}"
                                     OnColor="{StaticResource AccentPurple}" />
                         </Grid>
                         
@@ -85,7 +85,7 @@
                                 <Label Text="Increase font size across the app." FontSize="12"
                                        TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
                             </VerticalStackLayout>
-                            <Switch x:Name="LargeTextSwitch" Grid.Column="1" Toggled="OnLargeTextToggled"
+                            <Switch Grid.Column="1" IsToggled="{Binding IsLargeTextEnabled}"
                                     OnColor="{StaticResource AccentPurple}" />
                         </Grid>
                     </VerticalStackLayout>

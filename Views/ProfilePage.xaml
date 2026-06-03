@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FoodDrinkApp.ViewModels"
              x:Class="FoodDrinkApp.Views.ProfilePage"
              Title="Profile"
              Shell.NavBarIsVisible="False"
@@ -41,7 +42,7 @@
                 <VerticalStackLayout Spacing="12" Padding="16,12,16,30">
 
                     <!-- ── Active Profile Calorie Dashboard ── -->
-                    <Border x:Name="CalorieDashboard" Padding="18,16" StrokeShape="RoundRectangle 18" StrokeThickness="0"
+                    <Border IsVisible="{Binding HasActiveProfile}" Padding="18,16" StrokeShape="RoundRectangle 18" StrokeThickness="0"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
                         <Border.Shadow>
                             <Shadow Brush="Black" Offset="0,3" Opacity="0.08" Radius="10" />
@@ -53,21 +54,21 @@
                                 <Label Text="Today's Calorie Budget" FontSize="18" FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                             </HorizontalStackLayout>
-                            <Label x:Name="ActiveProfileLabel" Text="No profile set" FontSize="13"
+                            <Label Text="{Binding ActiveProfileLabel}" FontSize="13"
                                    TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
                             
                             <!-- Big calorie number -->
                             <Grid ColumnDefinitions="*, Auto" Margin="0,4,0,0">
                                 <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label x:Name="CalorieTargetLabel" Text="—" FontSize="40" FontAttributes="Bold"
+                                    <Label Text="{Binding CalorieTargetText}" FontSize="40" FontAttributes="Bold"
                                            TextColor="{StaticResource AccentOrange}" />
                                     <Label Text="kcal / day" FontSize="13"
                                            TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
                                 </VerticalStackLayout>
                                 <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
-                                    <Label x:Name="GoalIconLabel" Text="&#xe11c;" FontFamily="FluentIcons" FontSize="34"
+                                    <Label Text="{Binding GoalIcon}" FontFamily="FluentIcons" FontSize="34"
                                            TextColor="{StaticResource AccentPurple}" HorizontalOptions="Center" />
-                                    <Label x:Name="GoalLabel" Text="Maintain" FontSize="12" FontAttributes="Bold"
+                                    <Label Text="{Binding GoalLabel}" FontSize="12" FontAttributes="Bold"
                                            HorizontalOptions="Center"
                                            TextColor="{StaticResource AccentPurple}" />
                                 </VerticalStackLayout>
@@ -80,7 +81,7 @@
                                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                         <Label Text="&#xf362;" FontFamily="FluentIcons" FontSize="18" HorizontalOptions="Center"
                                                TextColor="{StaticResource AccentBlue}" />
-                                        <Label x:Name="ProteinLabel" Text="—" FontSize="16" FontAttributes="Bold"
+                                        <Label Text="{Binding ProteinText}" FontSize="16" FontAttributes="Bold"
                                                HorizontalOptions="Center" TextColor="{StaticResource AccentBlue}" />
                                         <Label Text="Protein" FontSize="11" HorizontalOptions="Center"
                                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
@@ -88,7 +89,7 @@
                                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                         <Label Text="&#xf1ec;" FontFamily="FluentIcons" FontSize="18" HorizontalOptions="Center"
                                                TextColor="{StaticResource AccentAmber}" />
-                                        <Label x:Name="CarbsLabel" Text="—" FontSize="16" FontAttributes="Bold"
+                                        <Label Text="{Binding CarbsText}" FontSize="16" FontAttributes="Bold"
                                                HorizontalOptions="Center" TextColor="{StaticResource AccentAmber}" />
                                         <Label Text="Carbs" FontSize="11" HorizontalOptions="Center"
                                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
@@ -96,7 +97,7 @@
                                     <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
                                         <Label Text="&#xe472;" FontFamily="FluentIcons" FontSize="18" HorizontalOptions="Center"
                                                TextColor="{StaticResource AccentPink}" />
-                                        <Label x:Name="FatLabel" Text="—" FontSize="16" FontAttributes="Bold"
+                                        <Label Text="{Binding FatText}" FontSize="16" FontAttributes="Bold"
                                                HorizontalOptions="Center" TextColor="{StaticResource AccentPink}" />
                                         <Label Text="Fat" FontSize="11" HorizontalOptions="Center"
                                                TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
@@ -106,10 +107,10 @@
 
                             <!-- Location + last refresh -->
                             <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
-                                <Label x:Name="LocationLabel" Grid.Column="0" Text="No location set" FontSize="12"
+                                <Label Grid.Column="0" Text="{Binding LocationText}" FontSize="12"
                                        TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
                                        VerticalOptions="Center" />
-                                <Label x:Name="RefreshDateLabel" Grid.Column="1" Text="" FontSize="11"
+                                <Label Grid.Column="1" Text="{Binding RefreshDateText}" FontSize="11"
                                        TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}"
                                        VerticalOptions="Center" />
                             </Grid>
@@ -123,10 +124,68 @@
                         <Label Text="Saved Profiles" FontSize="17" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                     </HorizontalStackLayout>
-                    <VerticalStackLayout x:Name="ProfileListContainer" Spacing="8" />
+                    
+                    <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Profiles}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="viewmodels:ProfileCardViewModel">
+                                <Border StrokeShape="RoundRectangle 16" Stroke="{Binding CardStroke}" StrokeThickness="{Binding CardStrokeThickness}" Padding="16"
+                                        BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C30}">
+                                    <Border.Shadow>
+                                        <Shadow Brush="Black" Offset="0,2" Opacity="0.08" Radius="6" />
+                                    </Border.Shadow>
+                                    <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="14">
+                                        <!-- Avatar -->
+                                        <Border Grid.Column="0" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" StrokeThickness="0" BackgroundColor="#267C4DFF" VerticalOptions="Center">
+                                            <Grid>
+                                                <Image Source="{Binding ImageSource}" Aspect="AspectFill" WidthRequest="48" HeightRequest="48" IsVisible="{Binding HasImage}" />
+                                                <Label Text="&#xf5bd;" FontFamily="FluentIcons" FontSize="24" TextColor="{Binding AccentColor}" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasNoImage}" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Text info -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                            <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" FontFamily="SegoeSemibold" TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="{Binding DetailsText}" FontSize="12" TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="{Binding GoalIcon}" FontFamily="FluentIcons" FontSize="14" TextColor="{Binding AccentColor}" VerticalOptions="Center" />
+                                                <Label Text="{Binding GoalText}" FontSize="12" TextColor="{Binding AccentColor}" FontAttributes="Bold" />
+                                            </HorizontalStackLayout>
+                                            <!-- Active Badge -->
+                                            <Border IsVisible="{Binding IsActive}" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="#4CAF50" Padding="8,2" HorizontalOptions="Start" Margin="0,3,0,0">
+                                                <HorizontalStackLayout Spacing="4">
+                                                    <Label Text="&#xe3b3;" FontFamily="FluentIcons" FontSize="10" TextColor="White" VerticalOptions="Center" />
+                                                    <Label Text="Active" FontSize="10" FontAttributes="Bold" TextColor="White" />
+                                                </HorizontalStackLayout>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- Action buttons -->
+                                        <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
+                                            <!-- Switch Button -->
+                                            <Border IsVisible="{Binding IsNotActive}" StrokeShape="RoundRectangle 10" StrokeThickness="0" BackgroundColor="#7C4DFF" Padding="10,6" HorizontalOptions="End">
+                                                <Label Text="Switch" FontSize="11" TextColor="White" FontAttributes="Bold" />
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProfileViewModel}}, Path=SwitchProfileCommand}" CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                            </Border>
+                                            <!-- Delete Button -->
+                                            <Border StrokeShape="RoundRectangle 10" StrokeThickness="0" BackgroundColor="#1EF44336" Padding="10,6" HorizontalOptions="End">
+                                                <Label Text="&#xf114;" FontFamily="FluentIcons" FontSize="16" TextColor="#F44336" HorizontalOptions="Center" />
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProfileViewModel}}, Path=DeleteProfileCommand}" CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                            </Border>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
 
                     <!-- ── Empty state ── -->
-                    <Border x:Name="EmptyState" Padding="30" StrokeShape="RoundRectangle 16" StrokeThickness="0" IsVisible="False"
+                    <Border IsVisible="{Binding IsEmpty}" Padding="30" StrokeShape="RoundRectangle 16" StrokeThickness="0"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Label Text="&#xf5bd;" FontFamily="FluentIcons" FontSize="48" HorizontalOptions="Center"
@@ -155,7 +214,7 @@
                 <Shadow Brush="{StaticResource AccentPurple}" Offset="0,4" Opacity="0.35" Radius="12" />
             </Border.Shadow>
             <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnAddProfileClicked" />
+                <TapGestureRecognizer Command="{Binding AddProfileCommand}" />
             </Border.GestureRecognizers>
             <Label Text="&#xf109;" FontFamily="FluentIcons" TextColor="White" FontSize="24"
                    HorizontalOptions="Center" VerticalOptions="Center" />

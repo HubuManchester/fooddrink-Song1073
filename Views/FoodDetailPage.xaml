@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FoodDrinkApp.ViewModels"
              x:Class="FoodDrinkApp.Views.FoodDetailPage"
              Title="Food Details"
              Shell.NavBarIsVisible="False"
@@ -13,35 +14,35 @@
             <!--  HERO HEADER – tall gradient with layered icons        -->
             <!-- ═══════════════════════════════════════════════════════ -->
             <!-- ═══════════════════════════════════════════════════════ -->
-            <Grid MinimumHeightRequest="200" BackgroundColor="{Binding CategoryBadgeColor}">
+            <Grid MinimumHeightRequest="200" BackgroundColor="{Binding Item.CategoryBadgeColor}">
 
                 <!-- ── Layer 0: Category-colour base (always visible) ── -->
-                <BoxView Color="{Binding CategoryBadgeColor}" />
+                <BoxView Color="{Binding Item.CategoryBadgeColor}" />
 
                 <!-- ── Layer 1a: Icon fallback (shown when NO photo) ── -->
-                <Label x:Name="HeroEmojiBg" Text="{Binding CategoryIcon}" FontFamily="FluentIcons" FontSize="130"
+                <Label x:Name="HeroEmojiBg" Text="{Binding Item.CategoryIcon}" FontFamily="FluentIcons" FontSize="130"
                        HorizontalOptions="End" VerticalOptions="End"
                        Margin="0,0,20,10" Opacity="0.15" TextColor="White">
                     <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding HasImage}" Value="True">
+                        <DataTrigger TargetType="Label" Binding="{Binding Item.HasImage}" Value="True">
                             <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
-                <Label x:Name="HeroEmojiMain" Text="{Binding CategoryIcon}" FontFamily="FluentIcons" FontSize="72"
+                <Label x:Name="HeroEmojiMain" Text="{Binding Item.CategoryIcon}" FontFamily="FluentIcons" FontSize="72"
                        HorizontalOptions="Center" VerticalOptions="Center" Opacity="0.95" TextColor="White">
                     <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding HasImage}" Value="True">
+                        <DataTrigger TargetType="Label" Binding="{Binding Item.HasImage}" Value="True">
                             <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
 
                 <!-- ── Layer 1b: Full-bleed photo (shown when photo exists) ── -->
-                <Image Source="{Binding ResolvedImageSource}" Aspect="AspectFill"
+                <Image Source="{Binding Item.ResolvedImageSource}" Aspect="AspectFill"
                        HorizontalOptions="Fill" VerticalOptions="Fill">
                     <Image.Triggers>
-                        <DataTrigger TargetType="Image" Binding="{Binding HasImage}" Value="False">
+                        <DataTrigger TargetType="Image" Binding="{Binding Item.HasImage}" Value="False">
                             <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
                     </Image.Triggers>
@@ -59,7 +60,7 @@
                             BackgroundColor="#55000000">
                         <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
                             <HorizontalStackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnBackTapped" />
+                                <TapGestureRecognizer Command="{Binding GoBackCommand}" />
                             </HorizontalStackLayout.GestureRecognizers>
                             <Label Text="&#xf15b;" FontFamily="FluentIcons" FontSize="16" TextColor="White"
                                    VerticalOptions="Center" />
@@ -72,8 +73,8 @@
                     <Border Grid.Column="2" Padding="14,6"
                             StrokeShape="RoundRectangle 20" StrokeThickness="0"
                             BackgroundColor="White" Opacity="0.92">
-                        <Label Text="{Binding Category}" FontSize="13" FontAttributes="Bold"
-                               TextColor="{Binding CategoryBadgeColor}" />
+                        <Label Text="{Binding Item.Category}" FontSize="13" FontAttributes="Bold"
+                               TextColor="{Binding Item.CategoryBadgeColor}" />
                     </Border>
                 </Grid>
 
@@ -90,23 +91,23 @@
 
                     <!-- ── Food name + location row ── -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="{Binding Name}" FontSize="28" FontAttributes="Bold"
+                        <Label Text="{Binding Item.Name}" FontSize="28" FontAttributes="Bold"
                                FontFamily="PlayfairBold" CharacterSpacing="0.3"
                                TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
 
                         <HorizontalStackLayout Spacing="6">
                             <Label Text="&#xf4f8;" FontFamily="FluentIcons" FontSize="14" VerticalOptions="Center" TextColor="{StaticResource AccentBlue}">
                                 <Label.Triggers>
-                                    <DataTrigger TargetType="Label" Binding="{Binding LocationText.Length}" Value="0">
+                                    <DataTrigger TargetType="Label" Binding="{Binding Item.LocationText.Length}" Value="0">
                                         <Setter Property="IsVisible" Value="False" />
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
-                            <Label Text="{Binding LocationText}" FontSize="14"
+                            <Label Text="{Binding Item.LocationText}" FontSize="14"
                                    TextColor="{StaticResource AccentBlue}" FontAttributes="Bold"
                                    VerticalOptions="Center">
                                 <Label.Triggers>
-                                    <DataTrigger TargetType="Label" Binding="{Binding LocationText.Length}" Value="0">
+                                    <DataTrigger TargetType="Label" Binding="{Binding Item.LocationText.Length}" Value="0">
                                         <Setter Property="IsVisible" Value="False" />
                                     </DataTrigger>
                                 </Label.Triggers>
@@ -118,7 +119,7 @@
                                 StrokeShape="RoundRectangle 12" StrokeThickness="0"
                                 BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3E2723}"
                                 HorizontalOptions="Start">
-                            <Label Text="{Binding ShortNutritionLabel}" FontSize="13"
+                            <Label Text="{Binding Item.ShortNutritionLabel}" FontSize="13"
                                    TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}"
                                    FontAttributes="Bold" />
                         </Border>
@@ -150,7 +151,7 @@
                                                HorizontalOptions="Center" VerticalOptions="Center" />
                                     </Border>
                                     <VerticalStackLayout Spacing="1" VerticalOptions="Center">
-                                        <Label Text="{Binding Calories, StringFormat='{0}'}"
+                                        <Label Text="{Binding Item.Calories, StringFormat='{0}'}"
                                                FontSize="20" FontAttributes="Bold"
                                                TextColor="{StaticResource AccentOrange}" />
                                         <Label Text="Calories" FontSize="11"
@@ -175,7 +176,7 @@
                                                HorizontalOptions="Center" VerticalOptions="Center" />
                                     </Border>
                                     <VerticalStackLayout Spacing="1" VerticalOptions="Center">
-                                        <Label Text="{Binding Protein, StringFormat='{0}g'}"
+                                        <Label Text="{Binding Item.Protein, StringFormat='{0}g'}"
                                                FontSize="20" FontAttributes="Bold"
                                                TextColor="{StaticResource AccentGreen}" />
                                         <Label Text="Protein" FontSize="11"
@@ -200,7 +201,7 @@
                                                HorizontalOptions="Center" VerticalOptions="Center" />
                                     </Border>
                                     <VerticalStackLayout Spacing="1" VerticalOptions="Center">
-                                        <Label Text="{Binding Carbs, StringFormat='{0}g'}"
+                                        <Label Text="{Binding Item.Carbs, StringFormat='{0}g'}"
                                                FontSize="20" FontAttributes="Bold"
                                                TextColor="{StaticResource AccentBlue}" />
                                         <Label Text="Carbs" FontSize="11"
@@ -225,7 +226,7 @@
                                                HorizontalOptions="Center" VerticalOptions="Center" />
                                     </Border>
                                     <VerticalStackLayout Spacing="1" VerticalOptions="Center">
-                                        <Label Text="{Binding Fat, StringFormat='{0}g'}"
+                                        <Label Text="{Binding Item.Fat, StringFormat='{0}g'}"
                                                FontSize="20" FontAttributes="Bold"
                                                TextColor="{StaticResource AccentPink}" />
                                         <Label Text="Fat" FontSize="11"
@@ -246,7 +247,7 @@
                         </Border.Shadow>
                         <Grid ColumnDefinitions="5, *">
                             <!-- Accent side bar -->
-                            <BoxView Grid.Column="0" Color="{Binding CategoryBadgeColor}"
+                            <BoxView Grid.Column="0" Color="{Binding Item.CategoryBadgeColor}"
                                      CornerRadius="16,0,16,0" />
                             <VerticalStackLayout Grid.Column="1" Spacing="8" Padding="16">
                                 <HorizontalStackLayout Spacing="8">
@@ -255,7 +256,7 @@
                                     <Label Text="About This Item" FontSize="16" FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light=#1A1A1A, Dark=White}" />
                                 </HorizontalStackLayout>
-                                <Label Text="{Binding Description}" FontSize="15" LineHeight="1.6"
+                                <Label Text="{Binding Item.Description}" FontSize="15" LineHeight="1.6"
                                        TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
                             </VerticalStackLayout>
                         </Grid>
@@ -283,7 +284,7 @@
                             <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
                                 <Label Text="Allergy Information" FontSize="15" FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}" />
-                                <Label Text="{Binding AllergyNote}" FontSize="14" LineHeight="1.4"
+                                <Label Text="{Binding Item.AllergyNote}" FontSize="14" LineHeight="1.4"
                                        TextColor="{AppThemeBinding Light=#BF360C, Dark=#FFCC80}" />
                             </VerticalStackLayout>
                         </Grid>
@@ -310,7 +311,7 @@
                                     Stroke="{StaticResource AccentPurple}"
                                     BackgroundColor="{AppThemeBinding Light=#F3E5F5, Dark=#1A0033}"
                                     HorizontalOptions="Start">
-                                <Label Text="{Binding Tags}" FontSize="14"
+                                <Label Text="{Binding Item.Tags}" FontSize="14"
                                        TextColor="{StaticResource AccentPurple}" FontAttributes="Bold" />
                             </Border>
                         </VerticalStackLayout>
@@ -334,7 +335,7 @@
                             <Label Text="Log this food item to your daily diet record."
                                    FontSize="13"
                                    TextColor="{AppThemeBinding Light={StaticResource SubtextLight}, Dark={StaticResource SubtextDark}}" />
-                            <Button Text="Add to Diet Record" Clicked="OnAddToDietClicked"
+                            <Button Text="Add to Diet Record" Command="{Binding AddToDietCommand}"
                                     BackgroundColor="{StaticResource AccentGreen}" TextColor="White"
                                     CornerRadius="12" MinimumHeightRequest="48" FontAttributes="Bold"
                                     FontSize="15" />
@@ -358,12 +359,12 @@
                             </HorizontalStackLayout>
                             <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
                                 <Button Grid.Column="0"
-                                        Text="Read Aloud" Clicked="OnSpeakClicked"
+                                        Text="Read Aloud" Command="{Binding SpeakCommand}"
                                         BackgroundColor="{StaticResource AccentBlue}" TextColor="White"
                                         CornerRadius="12" FontAttributes="Bold" MinimumHeightRequest="48"
                                         FontSize="14" />
                                 <Button Grid.Column="1"
-                                        Text="Stop" Clicked="OnStopSpeakClicked"
+                                        Text="Stop" Command="{Binding StopSpeakCommand}"
                                         BackgroundColor="{AppThemeBinding Light=#ECEFF1, Dark=#37474F}"
                                         TextColor="{AppThemeBinding Light=#37474F, Dark=#ECEFF1}"
                                         CornerRadius="12" MinimumHeightRequest="48" FontSize="14" />
@@ -386,7 +387,7 @@
                                 <Label Text="Danger Zone" FontSize="14" FontAttributes="Bold"
                                        TextColor="{StaticResource AccentRed}" />
                             </HorizontalStackLayout>
-                            <Button Text="Delete This Food" Clicked="OnDeleteClicked"
+                            <Button Text="Delete This Food" Command="{Binding DeleteCommand}"
                                     BackgroundColor="{StaticResource AccentRed}" TextColor="White"
                                     CornerRadius="12" MinimumHeightRequest="48" FontAttributes="Bold"
                                     FontSize="15" />
